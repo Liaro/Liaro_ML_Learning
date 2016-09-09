@@ -1,19 +1,23 @@
 # coding:utf-8
 
 import sys
+import random
 import numpy as np
+
+# 以下のサイトを参考にした
+# http://d.hatena.ne.jp/Kshi_Kshi/20111227/1324993576
 
 n = np.nan
 maze = np.array([
-    [n,  n,  n,  n,  n,  n,  n,  n,  n],
-    [n,  0,  0,  0, -1,  0, -1,  0,  n],
-    [n,  0, -1,  0, -1,  0, -1,  0,  n],
-    [n, -1, -1,  0,  0,  0,  0,  0,  n],
-    [n,  0, -1,  0, -1,  0, -1,  0,  n],
-    [n,  0,  0,  0, -1,  0, -1,  0,  n],
-    [n,  0, -1,  0,  0,  0, -1, 99,  n],
-    [n,  0,  0,  0, -1,  0,  0,  0,  n],
-    [n,  n,  n,  n,  n,  n,  n,  n,  n]
+    [n,   n,   n,  n,   n,  n,   n,   n,  n],
+    [n,   0,   0,  0, -10,  0, -10,   0,  n],
+    [n,   0, -10,  0, -10,  0, -10,   0,  n],
+    [n, -10, -10,  0,   0,  0, -10,   0,  n],
+    [n,   0, -10,  0, -10,  0,   0,   0,  n],
+    [n,   0,   0,  0, -10,  0, -10,   0,  n],
+    [n,   0, -10,  0,   0,  0, -10, 100,  n],
+    [n,   0,   0,  0, -10,  0,   0,   0,  n],
+    [n,   n,   n,  n,   n,  n,   n,   n,  n]
 ])
 
 # 定数
@@ -29,21 +33,23 @@ class Maze(object):
 
     def show_maze(self, state):
         """ 迷路の状態を表示 """
+        print("----- now state {} -----\n".format(state))
         x_len, y_len = self.field.shape
-        for y in y_len:
+        for y in range(y_len):
             line = []
-            for x in x_len:
+            for x in range(x_len):
                 label = ""
-                if np.isnan(field[y, x]):
+                if np.isnan(self.field[y, x]):
                     label = "#"
                 elif (x, y) == state:
                     label = "@"
                 else:
-                    label = str(field[y, x]))
+                    label = str(int(self.field[y, x]))
 
-                line.append("{:>2}".format(label))
+                line.append("{:>3}".format(label))
 
-            print " ".join(line)
+            print(" ".join(line))
+        print("\n")
 
     def get_actions(self, point):
         """ 移動可能な座標のリストを取得 """
@@ -69,12 +75,12 @@ class Q_Learning(object):
     def __init__(self, maze):
         self.Qvalue = {}
         self.maze = maze
-        self.state = (0, 0)
+        self.state = (1, 1)
 
     def learn_one_episode(self):
         """ 1エピソード分QLearningを行う """
         # 現在の位置(環境)を初期化
-        self.state = (0, 0)
+        self.state = (1, 1)
 
         while True:
             # 現在の位置（環境）に応じて行動を決定する
@@ -87,24 +93,55 @@ class Q_Learning(object):
             self.move(action)
 
             # ゴールについたら１エピソード終了
-            # (5, 6) : goal
-            if self.state == (5, 6):
+            # (7, 6) : goal
+            if self.state == (7, 6):
                 break
 
-    def choose_action(self):
+    def choose_action(self, state):
         """ e-greedy法で行動を決定する """
-        raise NotImplementedError()
+        if E_GREEDY_RATIO < random.random():
+            # 乱数がe以下の場合、ランダムに行動決定
+            return random.choice(self.maze.get_actions(state))
+        else:
+            # 乱数がe以上の場合、greedy法を適用
+            return self.choose_action_greedy(state)
 
-    def choose_action_greedy(self):
+    def choose_action_greedy(self, state):
         """ greedy法で行動を決定する """
-        raise NotImplementedError()
+        best_actions = []
+        max_q_value = -1
+        for a in self.maze.get_actions(state):
+            q_value = self.get_Qvalue(state, a)
+            if q_value > max_q_value:
+                best_actions = [a,]
+                max_q_value = q_value
+            elif q_value == max_q_value:
+                # 最大値が一致する場合も忘れない
+                best_actions.append(a)
+
+        # Q値の最大値が複数存在する場合はランダムに選択
+        return random.choice(best_actions)
 
     def update(self, state, action):
         """ Q値を更新 """
-        raise NotImplementedError()
+        # 更新式:
+        #       Q(s, a) <- Q(s, a) + alpha * {r(s, a) + gamma max{Q(s`, a`)} -  Q(s,a)}
+        #       Q(s, a): 状態sにおける行動aを取った時のQ値      Q_s_a
+        #       r(s, a): 状態sにおける報酬      r_s_a
+        #       max{Q(s`, a`)}: 次の状態s`が取りうる行動a`の中で最大のQ値 mQ_s_a)
+        Q_s_a = self.get_Qvalue(state, action)
+        mQ_s_a = max([self.get_Qvalue(action, n_action) for n_action in self.maze.get_actions(action)])
+        r_s_a = self.maze.get_value(action)
 
-    def move(self):
-        raise NotImplementedError()
+        # 計算
+        q_value = Q_s_a + ALPHA * (r_s_a + GAMMA * mQ_s_a - Q_s_a)
+
+        # 更新
+        self.set_Qvalue(state, action, q_value)
+
+    def move(self, point):
+        """ 迷路を移動する """
+        self.state = point
 
     def get_Qvalue(self, state, action):
         """ Q(s,a)を取得する. s:state, a:action """
@@ -121,7 +158,7 @@ class Q_Learning(object):
     def try_maze(self):
         """ 現在のQ値で迷路に挑戦 """
         # 現在の位置(環境)を初期化
-        self.state = (0, 0)
+        self.state = (1, 1)
         self.show_maze()
 
         while True:
@@ -133,25 +170,34 @@ class Q_Learning(object):
             self.show_maze()
 
             # ゴールについたら終了
-            if self.state == (5, 6):
+            if self.state == (7, 6):
                 break
 
     def show_qvalue(self):
         """ 各状態でのQ値を表示 """
-        raise NotImplementedError()
+        print("output Q Value")
+        for i, s in enumerate(self.Qvalue.keys()):
+            for a in self.Qvalue[s].keys():
+                print("\t\tQ(s, a): Q({}, {}): {}".format(s,
+                                                          a,
+                                                          self.Qvalue[s][a]))
+            if i != len(self.Qvalue.keys()) - 1:
+                print('\t----- next state -----')
 
     def show_maze(self):
         """ 現在の迷路の状態を表示 """
-        self.maze.show_maze()
+        self.maze.show_maze(self.state)
 
 if __name__ == "__main__":
     maze = Maze()
-    maze.show_maze()
+    maze.show_maze((1, 1))
 
     # Q-Learning
     QL = Q_Learning(maze)
     for i in range(1000):
-        QL.learn()
+        if i % 50 == 0:
+            print(i)
+        QL.learn_one_episode()
 
     QL.show_qvalue()
     QL.try_maze()
