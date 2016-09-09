@@ -1,19 +1,20 @@
 # coding:utf-8
 
 import sys
+import random
 import numpy as np
 
 n = np.nan
 maze = np.array([
-    [n,  n,  n,  n,  n,  n,  n,  n,  n],
-    [n,  0,  0,  0, -1,  0, -1,  0,  n],
-    [n,  0, -1,  0, -1,  0, -1,  0,  n],
-    [n, -1, -1,  0,  0,  0,  0,  0,  n],
-    [n,  0, -1,  0, -1,  0, -1,  0,  n],
-    [n,  0,  0,  0, -1,  0, -1,  0,  n],
-    [n,  0, -1,  0,  0,  0, -1, 99,  n],
-    [n,  0,  0,  0, -1,  0,  0,  0,  n],
-    [n,  n,  n,  n,  n,  n,  n,  n,  n]
+    [n,   n,   n,  n,   n,  n,   n,   n,  n],
+    [n,   0,   0,  0, -10,  0, -10,   0,  n],
+    [n,   0, -10,  0, -10,  0, -10,   0,  n],
+    [n, -10, -10,  0,   0,  0, -10,   0,  n],
+    [n,   0, -10,  0, -10,  0,   0,   0,  n],
+    [n,   0,   0,  0, -10,  0, -10,   0,  n],
+    [n,   0, -10,  0,   0,  0, -10, 100,  n],
+    [n,   0,   0,  0, -10,  0,   0,   0,  n],
+    [n,   n,   n,  n,   n,  n,   n,   n,  n]
 ])
 
 # 定数
@@ -29,21 +30,23 @@ class Maze(object):
 
     def show_maze(self, state):
         """ 迷路の状態を表示 """
+        print("----- now state {} -----\n".format(state))
         x_len, y_len = self.field.shape
-        for y in y_len:
+        for y in range(y_len):
             line = []
-            for x in x_len:
+            for x in range(x_len):
                 label = ""
-                if np.isnan(field[y, x]):
+                if np.isnan(self.field[y, x]):
                     label = "#"
                 elif (x, y) == state:
                     label = "@"
                 else:
-                    label = str(field[y, x]))
+                    label = str(int(self.field[y, x]))
 
-                line.append("{:>2}".format(label))
+                line.append("{:>3}".format(label))
 
-            print " ".join(line)
+            print(" ".join(line))
+        print("\n")
 
     def get_actions(self, point):
         """ 移動可能な座標のリストを取得 """
@@ -69,12 +72,12 @@ class Q_Learning(object):
     def __init__(self, maze):
         self.Qvalue = {}
         self.maze = maze
-        self.state = (0, 0)
+        self.state = (1, 1)
 
     def learn_one_episode(self):
         """ 1エピソード分QLearningを行う """
         # 現在の位置(環境)を初期化
-        self.state = (0, 0)
+        self.state = (1, 1)
 
         while True:
             # 現在の位置（環境）に応じて行動を決定する
@@ -87,8 +90,8 @@ class Q_Learning(object):
             self.move(action)
 
             # ゴールについたら１エピソード終了
-            # (5, 6) : goal
-            if self.state == (5, 6):
+            # (7, 6) : goal
+            if self.state == (7, 6):
                 break
 
     def choose_action(self):
@@ -121,7 +124,7 @@ class Q_Learning(object):
     def try_maze(self):
         """ 現在のQ値で迷路に挑戦 """
         # 現在の位置(環境)を初期化
-        self.state = (0, 0)
+        self.state = (1, 1)
         self.show_maze()
 
         while True:
@@ -133,7 +136,7 @@ class Q_Learning(object):
             self.show_maze()
 
             # ゴールについたら終了
-            if self.state == (5, 6):
+            if self.state == (7, 6):
                 break
 
     def show_qvalue(self):
@@ -142,7 +145,7 @@ class Q_Learning(object):
 
     def show_maze(self):
         """ 現在の迷路の状態を表示 """
-        self.maze.show_maze()
+        self.maze.show_maze(self.state)
 
 if __name__ == "__main__":
     maze = Maze()
@@ -151,7 +154,9 @@ if __name__ == "__main__":
     # Q-Learning
     QL = Q_Learning(maze)
     for i in range(1000):
-        QL.learn()
+        if i % 50 == 0:
+            print("episode {}".format(i))
+        QL.learn_one_episode()
 
     QL.show_qvalue()
     QL.try_maze()
