@@ -65,12 +65,14 @@ class Maze(object):
 
 
 class Q_Learning(object):
-    def __init__(maze):
+    """ QLearningで迷路を解く """
+    def __init__(self, maze):
         self.Qvalue = {}
         self.maze = maze
         self.state = (0, 0)
 
-    def learn_one_episode():
+    def learn_one_episode(self):
+        """ 1エピソード分QLearningを行う """
         # 現在の位置(環境)を初期化
         self.state = (0, 0)
 
@@ -89,16 +91,19 @@ class Q_Learning(object):
             if self.state == (5, 6):
                 break
 
-    def choose_action():
+    def choose_action(self):
+        """ e-greedy法で行動を決定する """
         raise NotImplementedError()
 
-    def choose_action_greedy():
+    def choose_action_greedy(self):
+        """ greedy法で行動を決定する """
         raise NotImplementedError()
 
-    def update(state, action):
+    def update(self, state, action):
+        """ Q値を更新 """
         raise NotImplementedError()
 
-    def move():
+    def move(self):
         raise NotImplementedError()
 
     def get_Qvalue(self, state, action):
@@ -113,7 +118,7 @@ class Q_Learning(object):
         self.Qvalue.setdefault(state, {})
         self.Qvalue[state][action] = q_value
 
-    def try_maze():
+    def try_maze(self):
         """ 現在のQ値で迷路に挑戦 """
         # 現在の位置(環境)を初期化
         self.state = (0, 0)
@@ -131,10 +136,11 @@ class Q_Learning(object):
             if self.state == (5, 6):
                 break
 
-    def show_qvalue():
+    def show_qvalue(self):
+        """ 各状態でのQ値を表示 """
         raise NotImplementedError()
 
-    def show_maze():
+    def show_maze(self):
         """ 現在の迷路の状態を表示 """
         self.maze.show_maze()
 
