@@ -6,11 +6,12 @@ from sklearn.utils import shuffle
 from PIL import Image
 
 
+# data：画像、target：ラベル、
 class load_koma():
     def __init__(self):
-        self.target_names = np.array(["fu", "gin", "hisya", "kaku", "kei", "kin", "kyo", "ou"]) # 成駒以外：8クラス
+        target_names = np.array(["fu", "gin", "hisya", "kaku", "kei", "kin", "kyo", "ou"]) # 成り駒以外の8クラス
 
-        # pickleファイルがあれば読み込む
+        # pickleファイルがあればそこから読み込む
         if ("./koma_data.pickle" in glob.glob("./*")) and (("./koma_target.pickle" in glob.glob("./*"))):
             with open("koma_data.pickle", "rb") as f:
                 self.data = pickle.load(f)
@@ -18,9 +19,9 @@ class load_koma():
             with open("koma_target.pickle", "rb") as f:
                 self.target = pickle.load(f)
 
-        # pickleファイルなければ作る。
+        # pickleファイルがなければ元のデータセットから読み込み、pickle化も行う
         else:
-            self.data = []
+            self.data = [] 
             self.target = []
 
             size = (64, 80) # 画像サイズ = (横, 縦)
@@ -36,12 +37,12 @@ class load_koma():
                     self.target.append(target)
 
             # Arrayに変換
-            self.data = np.array(self.data)
-            self.target = np.array(self.target)
+            self.data = np.array(data)
+            self.arget = np.array(target)
 
             # pickle化
             with open("koma_data.pickle", "wb") as f:
-                pickle.dump(self.data, f)
+                pickle.dump(data, f)
 
             with open("koma_target.pickle", "wb") as f:
-                pickle.dump(self.target, f)
+                pickle.dump(target, f)

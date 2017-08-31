@@ -9,7 +9,6 @@ import chainer
 
 def train(model, optimizer, x_data, y_data, batchsize=10):
     N = x_data.shape[0]
-    # perm = np.random.permutation(N) # 学習する順番をランダムに入れ替え
     x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替え
 
     sum_accuracy = 0    # 累計正答率

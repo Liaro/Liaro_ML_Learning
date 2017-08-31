@@ -19,12 +19,6 @@ x = koma.data
 y = koma.target
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
-# 形状の確認
-print("x_train:", x_train.shape)
-print("y_train:", y_train.shape)
-print("x_test:", x_test.shape)
-print("y_test:", y_test.shape)
-
 
 # Chainerでは実数のタイプはnp.float32, 整数のタイプはnp.int32に固定しておく必要がある．
 x_train = x_train.astype(np.float32) # (40681, 80, 64, 3)
