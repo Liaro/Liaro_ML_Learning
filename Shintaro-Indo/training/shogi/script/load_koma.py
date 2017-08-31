@@ -9,7 +9,9 @@ from PIL import Image
 # data：画像、target：ラベル、
 class load_koma():
     def __init__(self):
-        self.target_names = np.array(["fu", "gin", "hisya", "kaku", "kei", "kin", "kyo", "ou"]) # 成り駒以外の8クラス
+        
+        # 成り駒以外の8クラス
+        self.target_names = np.array(["fu", "gin", "hisya", "kaku", "kei", "kin", "kyo", "ou"]) 
 
         # pickleファイルがあればそこから読み込む
         if ("../koma_data.pickle" in glob.glob("./*")) and (("../koma_target.pickle" in glob.glob("./*"))):
@@ -19,7 +21,7 @@ class load_koma():
             with open("../koma_target.pickle", "rb") as f:
                 self.target = pickle.load(f)
 
-        # pickleファイルがなければ元のデータセットから読み込み、pickle化も行う
+        # pickleファイルがなければ元のデタセットから読み込み、pickle化も行う
         else:
             self.data = [] 
             self.target = []
@@ -38,7 +40,7 @@ class load_koma():
 
             # Arrayに変換
             self.data = np.array(self.data)
-            self.arget = np.array(self.target)
+            self.target = np.array(self.target)
 
             # pickle化
             with open("../koma_data.pickle", "wb") as f:
