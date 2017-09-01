@@ -8,8 +8,7 @@ class ResBlock(Chain):
 
     def __init__(self, in_size, ch):
         super(ResBlock, self).__init__(#
-            initialW = initializers.HeNormal()
-
+            initialW = initializers.HeNormal(),
             # with self.init_scope():
             self.conv1 = L.Convolution2D(in_size, ch, 1, 1, 0, initialW=initialW, nobias=True), #(入力チャネル数，出力フィルタ数，カーネルサイズ，ストライド(1)，パディング(0)）
             self.bn1 = L.BatchNormalization(ch),
