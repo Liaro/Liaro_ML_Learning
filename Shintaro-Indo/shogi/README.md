@@ -3,14 +3,15 @@
 **ツリー構造**
 
 	shogi/  
-		┣ dataset/  
-			┣ image/  
-				┣ annotation_koma_merge/  
-			┣ pickles/  
+		┣ dataset/
+			┣ data.py：データセットの作成  
+			┣ image/ ← 重いのであげていません
+				┣ annotation_koma_merge/  
+			┣ pickles/ ← 重いのであげていません
 				┣ data.pickle  
 				┣ target.pickle  
-		┣ result/  
-		┣ src/  
+		┣ result/ ← 未
+		┣ src/   
 			┣ cnn.py  
 			┣ mlp.py  
 			┣ non_nn.py：NN以外の学習  
@@ -27,7 +28,8 @@
 	- MLP
 		- (train, test, F1) = (0.9953, 0.9742, - )  
 		  * チューニングは未
+		  
+	- CNN
+		- 未
 
-
-
-	* kNNN，SVMは時間がかかりすぎるため保留
+	* kNNN，SVMは時間がかかりすぎるため保留中
