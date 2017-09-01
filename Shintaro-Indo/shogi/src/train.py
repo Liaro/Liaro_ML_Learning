@@ -14,8 +14,14 @@ from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 
 import chainer
+from chainer import cuda
 from chainer import optimizers
 import chainer.links as L
+
+
+
+cuda.check_cuda_available()
+xp = cuda.cupy
 
 
 # 訓練データに対する正答率，誤差を表示する関数
@@ -23,13 +29,14 @@ def train(model, optimizer, x_data, y_data, batchsize=10):
     N = x_data.shape[0] # データ数
     x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替え
 
+
     sum_accuracy = 0 # 累計正答率
     sum_loss = 0 # 累計誤差
     start = time.time() # 開始時刻
 
     # batchsize個ずつ学習
     for i in tqdm(range(0, N, batchsize)):
-        x = chainer.Variable(np.asarray(x_data[i: i+batchsize]))
+        x = chainer.Variable(xp.asarray(x_data[i: i+batchsize]))
         t = chainer.Variable(np.asarray(y_data[i: i+batchsize]))
 
         # パラメータの更新(学習)
@@ -54,7 +61,7 @@ def test(model, x_data, y_data, batchsize=10):
 
     for i in tqdm(range(0, N, batchsize)):
         # 評価の時はvolatile *volatileをTrueにするとBackpropergationできない
-        x = chainer.Variable(np.asarray(x_data[i: i+batchsize]))
+        x = chainer.Variable(xp.asarray(x_data[i: i+batchsize]))
         t = chainer.Variable(np.asarray(y_data[i: i+batchsize]))
 
         # 評価
@@ -93,9 +100,10 @@ if __name__ == "__main__":
 
 
     # Step3.モデルと最適化アルゴリズムの設定
-    model = L.Classifier(models[1]) # モデルの生成
+    model = L.Classifier(models[1]).to_gpu(0) # モデルの生成(GPU対応)
     optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
     optimizer.setup(model) # アルゴリズムにモデルをフィット
+
 
 
     # Step4.学習

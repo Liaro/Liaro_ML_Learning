@@ -4,16 +4,17 @@
 
 	shogi/  
 		┣ dataset/
-			┣ data.py： pickleファイルがあれば読み込み， なければ生データからデータセットを作成してpickle化も行う
-			┣ image/ ← ignore
-				┣ annotation_koma_merge/  
+			┣ images/ ← ignore
+				┣ annotation_koma_merge/...  
 			┣ pickles/ ← ignore
 				┣ data.pickle
 				┣ target.pickle  
 		┣ result/ ← 未
 		┣ src/  
-			┣ cnn.py  
-			┣ mlp.py  
+			┣ data.py： pickleファイルがあれば読み込み， なければ生データからデータセットを作成してpickle化も行う
+			┣ cnn.py： CNNクラス  
+			┣ mlp.py： MLPクラス
+			┣ resnet.py：ResNetクラス
 			┣ non_nn.py： NN以外の学習  
 			┣ train.py： NNの学習  
 	　　
