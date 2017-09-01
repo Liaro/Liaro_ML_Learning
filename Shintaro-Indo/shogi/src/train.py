@@ -98,12 +98,13 @@ if __name__ == "__main__":
         models = [
             MLP(1000),
             CNN(),
-            ResNetSmall()
+            # ResNetSmall()
         ]
 
 
         # Step3.モデルと最適化アルゴリズムの設定
         model = L.Classifier(models[int(sys.argv[1])]).to_gpu(gpu_device) # モデルの生成(GPU対応)
+        print(model)
         optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
         optimizer.setup(model) # アルゴリズムにモデルをフィット
 
