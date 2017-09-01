@@ -5,9 +5,9 @@
 	shogi/  
 		┣ dataset/
 			┣ data.py： pickleファイルがあれば読み込み， なければ生データからデータセットを作成してpickle化も行う
-			┣ image/ ← 重いためあげていない
+			┣ image/ ← ignore
 				┣ annotation_koma_merge/  
-			┣ pickles/ ← 重いためあげていない
+			┣ pickles/ ← ignore
 				┣ data.pickle
 				┣ target.pickle  
 		┣ result/ ← 未
