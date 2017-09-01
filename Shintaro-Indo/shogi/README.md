@@ -4,32 +4,32 @@
 
 	shogi/  
 		┣ dataset/
-			┣ data.py：データセットの作成  
-			┣ image/ ← 重いのであげていません
+			┣ data.py： pickleファイルがあれば読み込み，なければ生データからデータセットを作成しpickleも作成する  
+			┣ image/ ← 重いためあげていない
 				┣ annotation_koma_merge/  
-			┣ pickles/ ← 重いのであげていません
-				┣ data.pickle  
-				┣ target.pickle  
+			┣ pickles/ ← 重いためあげていない
+				┣ data.pickle
+				┣ target.pickle  
 		┣ result/ ← 未
 		┣ src/   
 			┣ cnn.py  
 			┣ mlp.py  
-			┣ non_nn.py：NN以外の学習  
-			┣ train.py：NNの学習  
+			┣ non_nn.py： NN以外の学習  
+			┣ train.py： NNの学習  
 	　　
 
 **結果**
 
-	- RF
-		- 前処理なし：(train, test, F1) = (0.9997, 0.9859, 0.9840)
-		- 適当な閾値(定数)で二値化：(train, test, F1) = (0.8273, 0.7779, 0.6552)  
-		* 画像によっては真っ黒(白)になってしまうため
+	RF
+	- 前処理なし：(train, test, F1) = (0.9997, 0.9859, 0.9840)
+	- 適当な閾値(定数)で二値化：(train, test, F1) = (0.8273, 0.7779, 0.6552)  
+	　∵ 画像によっては真っ黒(白)になってしまう
 
-	- MLP
-		- (train, test, F1) = (0.9953, 0.9742, - )  
-		  * チューニングは未
+	MLP
+	- (train, test, F1) = (0.9953, 0.9742, - )  
+	  * チューニングは未
 		  
-	- CNN
-		- 未
+	CNN
+	- 未
 
-	* kNNN，SVMは時間がかかりすぎるため保留中
+	* kNNN，SVMはCPUだと時間ががかるので保留中
