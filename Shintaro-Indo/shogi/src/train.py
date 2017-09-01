@@ -75,46 +75,50 @@ def test(model, x_data, y_data, batchsize=10):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) == 2 and (0 <= int(sys.argv[1]) <= 2): # コマンドライン引数が条件を満たしているとき
 
-    # Step1.データの準備
-    ## 読み込み
-    koma = fetch_data()
-    x = koma.data
-    y = koma.target
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+        # Step1.データの準備
+        ## 読み込み
+        koma = fetch_data()
+        x = koma.data
+        y = koma.target
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
-    ## Chainerでは実数のタイプはfloat32, 整数のタイプはint32に固定しておく必要がある．
-    x_train = x_train.astype(xp.float32) # (40681, 80, 64, 3)
-    y_train = y_train.astype(xp.int32) # (40681,)
-    x_test = x_test.astype(xp.float32)
-    y_test = y_test.astype(xp.int32)
+        ## Chainerでは実数のタイプはfloat32, 整数のタイプはint32に固定しておく必要がある．
+        x_train = x_train.astype(xp.float32) # (40681, 80, 64, 3)
+        y_train = y_train.astype(xp.int32) # (40681,)
+        x_test = x_test.astype(xp.float32)
+        y_test = y_test.astype(xp.int32)
 
-    ## 輝度を揃える
-    x_train /= x_train.max()
-    x_test /= x_test.max()
-
-
-    # Step2.モデルの記述
-    models = [
-        MLP(1000),
-        CNN(),
-        ResNetSmall()
-    ]
+        ## 輝度を揃える
+        x_train /= x_train.max()
+        x_test /= x_test.max()
 
 
-    # Step3.モデルと最適化アルゴリズムの設定
-    model = L.Classifier(models[2]).to_gpu(gpu_device) # モデルの生成(GPU対応)
-    optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
-    optimizer.setup(model) # アルゴリズムにモデルをフィット
+        # Step2.モデルの記述
+        models = [
+            MLP(1000),
+            CNN(),
+            ResNetSmall()
+        ]
 
 
-    # Step4.学習
-    n_epoch = 10 # 学習回数(学習データを何周するか)
-    for epoch in range(1, n_epoch + 1):
-        print("\nepoch", epoch)
+        # Step3.モデルと最適化アルゴリズムの設定
+        model = L.Classifier(models[int(sys.argv[1])]).to_gpu(gpu_device) # モデルの生成(GPU対応)
+        optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
+        optimizer.setup(model) # アルゴリズムにモデルをフィット
 
-        # 訓練
-        train(model, optimizer, x_train, y_train, batchsize=100)
 
-        # 評価
-        test(model, x_test, y_test, batchsize=100)
+        # Step4.学習
+        n_epoch = 10 # 学習回数(学習データを何周するか)
+        for epoch in range(1, n_epoch + 1):
+            print("\nepoch", epoch)
+
+            # 訓練
+            train(model, optimizer, x_train, y_train, batchsize=100)
+
+            # 評価
+            test(model, x_test, y_test, batchsize=100)
+
+    else: # 例外処理
+        print("please specify the model index (MLP:0, CNN:1, ResNet:2) like $ python non_nn.py 2 ")
