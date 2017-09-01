@@ -7,11 +7,11 @@ class CNN(chainer.Chain):
     def __init__(self):
         super(CNN, self).__init__()
         with self.init_scope():
-            conv1 = L.Convolution2D(3, 32, 3, stride=1, pad=2), # (入力チャンネル数、出力チャンネル数、フィルタサイズ)
-            conv2 = L.Convolution2D(32, 32, 3, stride=1, pad=2),
-            conv3 = L.Convolution2D(32, 64, 3, stride=1, pad=2),
-            fc4 = L.Linear(None, 64*10*8),
-            fc5 = L.Linear(None, 8),
+            conv1 = L.Convolution2D(3, 32, 3, stride=1, pad=2) # (入力チャンネル数、出力チャンネル数、フィルタサイズ)
+            conv2 = L.Convolution2D(32, 32, 3, stride=1, pad=2)
+            conv3 = L.Convolution2D(32, 64, 3, stride=1, pad=2)
+            fc4 = L.Linear(None, 64*10*8)
+            fc5 = L.Linear(None, 8)
         # )
 
     def __call__(self, x):
