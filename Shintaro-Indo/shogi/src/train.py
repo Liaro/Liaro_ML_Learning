@@ -1,16 +1,16 @@
 import sys,os
 sys.path.append(os.pardir)
 
-from dataset.data import fetch_data
+from data import fetch_data
 from mlp import MLP
 from cnn import CNN
 
 import numpy as np
 import time
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 
 from sklearn.utils import shuffle
+from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 
 import chainer
@@ -65,8 +65,8 @@ def test(model, x_data, y_data, batchsize=10):
     print("test mean loss={}, accuracy={}".format(sum_loss / N, sum_accuracy / N))
 
 
-if __name__ == "main":
-    
+if __name__ == "__main__":
+
     # Step1.データの準備
     ## 読み込み
     koma = fetch_data()

@@ -1,6 +1,6 @@
 import sys,os
 sys.path.append(os.pardir)
-from dataset.data import fetch_data
+from data import fetch_data
 
 import numpy as np
 import itertools

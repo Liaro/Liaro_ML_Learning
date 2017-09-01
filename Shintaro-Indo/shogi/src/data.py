@@ -4,6 +4,8 @@ import glob
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 from PIL import Image
+from zipfile import ZipFile
+import os
 
 
 class fetch_data():
@@ -14,17 +16,28 @@ class fetch_data():
         self.make_dataset()
 
 
-    def make_dataset(self):    
-        # pickleファイルがあればそこから読み込む
-        if ("../dataset/pickles/data.pickle" in glob.glob("../dataset/pickles/*")) and ("../dataset/pickles/target.pickle" in glob.glob("../dataset/pickles/*")):
+    def make_dataset(self):
+        # pickles(zipも可)があればそこから読み込む
+        if ("../dataset/pickles" in glob.glob("../dataset/*")) or ("../dataset/pickles.zip" in glob.glob("../dataset/*")):
+            # zipファイルしかなけば解凍する．
+            if "../dataset/pickles" not in glob.glob("../dataset/*"):
+                with ZipFile('../dataset/pickles.zip', 'r') as z:
+                    z.extractall(path="../dataset/")
+
             with open("../dataset/pickles/data.pickle", "rb") as f:
                 self.data = pickle.load(f)
 
             with open("../dataset/pickles/target.pickle", "rb") as f:
                 self.target = pickle.load(f)
 
-        # pickleファイルがなければ生のデータを読み込みpickle化も行う。
-        else:
+
+        # 生のデータ(zipも可)があればそこから読み込む
+        elif ("../dataset/images/annotation_koma_merge" in glob.glob("../dataset/images/*")) or ("../dataset/images/annotation_koma_merge.zip" in glob.glob("../dataset/images/*")):
+            # zipファイルしかなけば解凍する．
+            if "../dataset/images/annotation_koma_merge" not in glob.glob("../dataset/*"):
+                with ZipFile("../dataset/images/annotation_koma_merge.zip", 'r') as z:
+                    z.extractall(path="../dataset/images")
+
             size = (64, 80) # 画像サイズ = (横, 縦)
             data_dir = "../dataset/images/annotation_koma_merge/" # 画像があるディレクトリ
 
@@ -42,9 +55,13 @@ class fetch_data():
             self.target = np.array(self.target)
 
             # pickle化
+            os.mkdir(path="../dataset/pickles")
             with open("../dataset/pickles/data.pickle", "wb") as f:
                 pickle.dump(self.data, f)
 
             with open("../dataset/pickles/target.pickle", "wb") as f:
                 pickle.dump(self.target, f)
 
+
+        else:
+            print("You have no available dataset")
