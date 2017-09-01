@@ -4,7 +4,7 @@ sys.path.append(os.pardir)
 from data import fetch_data
 from mlp import MLP
 from cnn import CNN
-from resnet import ResNetSmall
+from resnet import ResNetSmall, ResBlock
 
 import numpy as np
 import time
