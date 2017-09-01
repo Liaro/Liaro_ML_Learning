@@ -9,14 +9,15 @@
 			┣ pickles/ ← ignore
 				┣ data.pickle
 				┣ target.pickle  
-		┣ result/ ← 未
+		┣ result/ 
 		┣ src/  
 			┣ data.py： pickleファイルがあれば読み込み， なければ生データからデータセットを作成してpickle化も行う
-			┣ cnn.py： CNNクラス  
-			┣ mlp.py： MLPクラス
-			┣ resnet.py：ResNetクラス
 			┣ non_nn.py： NN以外の学習  
 			┣ train.py： NNの学習  
+			┣ cnn.py
+			┣ mlp.py
+			┣ resnet.py
+
 	　　
 
 **結果**
