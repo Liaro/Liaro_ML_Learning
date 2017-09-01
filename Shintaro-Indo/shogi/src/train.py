@@ -74,7 +74,7 @@ def test(model, x_data, y_data, batchsize=10):
 
 if __name__ == "__main__":
 
-    Step1.データの準備
+    # Step1.データの準備
     # # テスト用
     # x = Variable(xp.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=xp.float32))
     # t = Variable(xp.array([[0], [1], [1], [1]], dtype=xp.float32))
