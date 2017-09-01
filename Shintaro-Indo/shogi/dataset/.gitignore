@@ -3,3 +3,6 @@
 
 # picklesディレクトリはignore
 /pickles/
+
+# __pycache__など
+__*/
