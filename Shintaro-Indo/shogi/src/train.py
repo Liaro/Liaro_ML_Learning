@@ -19,8 +19,9 @@ from chainer import optimizers
 import chainer.links as L
 
 
-
-cuda.check_cuda_available()
+gpu_device = 0
+cuda.get_device(gpu_device).use()
+model.to_gpu(gpu_device)
 xp = cuda.cupy
 
 
@@ -37,7 +38,7 @@ def train(model, optimizer, x_data, y_data, batchsize=10):
     # batchsize個ずつ学習
     for i in tqdm(range(0, N, batchsize)):
         x = chainer.Variable(xp.asarray(x_data[i: i+batchsize]))
-        t = chainer.Variable(np.asarray(y_data[i: i+batchsize]))
+        t = chainer.Variable(xp.asarray(y_data[i: i+batchsize]))
 
         # パラメータの更新(学習)
         optimizer.update(model, x, t)
@@ -62,7 +63,7 @@ def test(model, x_data, y_data, batchsize=10):
     for i in tqdm(range(0, N, batchsize)):
         # 評価の時はvolatile *volatileをTrueにするとBackpropergationできない
         x = chainer.Variable(xp.asarray(x_data[i: i+batchsize]))
-        t = chainer.Variable(np.asarray(y_data[i: i+batchsize]))
+        t = chainer.Variable(xp.asarray(y_data[i: i+batchsize]))
 
         # 評価
         loss = model(x, t)
@@ -75,17 +76,22 @@ def test(model, x_data, y_data, batchsize=10):
 if __name__ == "__main__":
 
     # Step1.データの準備
+    ## テスト用
+    x = Variable(xp.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=xp.float32))
+    t = Variable(xp.array([[0], [1], [1], [1]], dtype=xp.float32))
+    x_train, x_test, y_train, y_test = train_test_split(x, t, test_size=0.3, random_state=42)
+
     ## 読み込み
     koma = fetch_data()
     x = koma.data
     y = koma.target
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
-    ## Chainerでは実数のタイプはnp.float32, 整数のタイプはnp.int32に固定しておく必要がある．
-    x_train = x_train.astype(np.float32) # (40681, 80, 64, 3)
-    y_train = y_train.astype(np.int32) # (40681,)
-    x_test = x_test.astype(np.float32)
-    y_test = y_test.astype(np.int32)
+    ## Chainerでは実数のタイプはfloat32, 整数のタイプはint32に固定しておく必要がある．
+    x_train = x_train.astype(xp.float32) # (40681, 80, 64, 3)
+    y_train = y_train.astype(xp.int32) # (40681,)
+    x_test = x_test.astype(xp.float32)
+    y_test = y_test.astype(xp.int32)
 
     ## 輝度を揃える
     x_train /= x_train.max()
