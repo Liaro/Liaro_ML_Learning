@@ -2,19 +2,19 @@
 
 **ツリー構造**
 
-shogi/
-	┣ dataset/
-		┣ image/
-			┣ annotation_koma_merge/
-		┣ pickles/
-			┣ data.pickle
-			┣ target.pickle
-	┣ result/
-	┣ src/
-		┣ cnn.py
-		┣ mlp.py
-		┣ non_nn.py：NN以外の学習
-		┣ train.py：NNの学習
+shogi/  
+	┣ dataset/  
+		┣ image/  
+			┣ annotation_koma_merge/  
+		┣ pickles/  
+			┣ data.pickle  
+			┣ target.pickle  
+	┣ result/  
+	┣ src/  
+		┣ cnn.py  
+		┣ mlp.py  
+		┣ non_nn.py：NN以外の学習  
+		┣ train.py：NNの学習  
 	　　
 
 **結果**
