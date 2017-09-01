@@ -12,7 +12,7 @@ class ResBlock(chainer.Chain):
         super(ResBlock, self).__init__()
         initialW = initializers.HeNormal(),
         with self.init_scope():
-            self.conv1 = L.Convolution2D(in_size, ch, 1, 1, 0, initialW=initialW, nobias=True),
+            self.conv1 = L.Convolution2D(in_size, ch, 1, 1, 0, initialW=initialW, nobias=True), # コンマ必要だったっぽい
             self.bn1 = L.BatchNormalization(ch),
             self.conv2 = L.Convolution2D(ch, ch, 3, 1, 1, initialW=initialW, nobias=True),
             self.bn2 = L.BatchNormalization(ch),

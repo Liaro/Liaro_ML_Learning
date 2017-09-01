@@ -98,7 +98,7 @@ if __name__ == "__main__":
         models = [
             MLP(1000),
             CNN(),
-            # ResNetSmall()
+            ResNetSmall()
         ]
 
 
