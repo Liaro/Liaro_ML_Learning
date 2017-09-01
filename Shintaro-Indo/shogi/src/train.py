@@ -77,9 +77,9 @@ if __name__ == "__main__":
 
     # Step1.データの準備
     ## テスト用
-    x = Variable(xp.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=xp.float32))
-    t = Variable(xp.array([[0], [1], [1], [1]], dtype=xp.float32))
-    x_train, x_test, y_train, y_test = train_test_split(x, t, test_size=0.3, random_state=42)
+    # x = Variable(xp.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=xp.float32))
+    # t = Variable(xp.array([[0], [1], [1], [1]], dtype=xp.float32))
+    # x_train, x_test, y_train, y_test = train_test_split(x, t, test_size=0.3, random_state=42)
 
     ## 読み込み
     koma = fetch_data()
