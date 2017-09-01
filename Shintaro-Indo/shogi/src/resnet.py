@@ -31,8 +31,7 @@ class ResNetSmall(chainer.Chain):
 
     def __init__(self):
         super(ResNetSmall, self).__init__(
-            conv1 = L.Convolution2D(
-                3, 32, 5, initialW=initializers.HeNormal()),
+            conv1 = L.Convolution2D(3, 32, 5, initialW=initializers.HeNormal()),
             bn1 = L.BatchNormalization(32),
             res1= ResBlock(32, 32),
             res2= ResBlock(32, 32),
