@@ -21,7 +21,6 @@ import chainer.links as L
 
 gpu_device = 0
 cuda.get_device(gpu_device).use()
-model.to_gpu(gpu_device)
 xp = cuda.cupy
 
 
@@ -75,8 +74,8 @@ def test(model, x_data, y_data, batchsize=10):
 
 if __name__ == "__main__":
 
-    # Step1.データの準備
-    ## テスト用
+    Step1.データの準備
+    # # テスト用
     # x = Variable(xp.array([[0, 0], [0, 1], [1, 0], [1, 1]], dtype=xp.float32))
     # t = Variable(xp.array([[0], [1], [1], [1]], dtype=xp.float32))
     # x_train, x_test, y_train, y_test = train_test_split(x, t, test_size=0.3, random_state=42)
@@ -106,7 +105,7 @@ if __name__ == "__main__":
 
 
     # Step3.モデルと最適化アルゴリズムの設定
-    model = L.Classifier(models[1]).to_gpu(0) # モデルの生成(GPU対応)
+    model = L.Classifier(models[1]).to_gpu(gpu_device) # モデルの生成(GPU対応)
     optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
     optimizer.setup(model) # アルゴリズムにモデルをフィット
 
