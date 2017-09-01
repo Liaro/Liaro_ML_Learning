@@ -9,7 +9,7 @@
 			┣ pickles/ ← ignore
 				┣ data.pickle
 				┣ target.pickle  
-		┣ result/ 
+		┣ result/
 		┣ src/  
 			┣ data.py： pickleファイルがあれば読み込み， なければ生データからデータセットを作成してpickle化も行う
 			┣ non_nn.py： NN以外の学習  
@@ -33,4 +33,4 @@
 	  * チューニングは未
 
 	CNN
-	- 未
+	- (train, test, F1) = (0.9916, 0.9928, - )  
