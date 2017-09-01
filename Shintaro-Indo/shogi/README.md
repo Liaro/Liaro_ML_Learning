@@ -11,7 +11,7 @@
 				┣ data.pickle
 				┣ target.pickle  
 		┣ result/ ← 未
-		┣ src/   
+		┣ src/  
 			┣ cnn.py  
 			┣ mlp.py  
 			┣ non_nn.py： NN以外の学習  
@@ -29,8 +29,6 @@
 	MLP
 	- (train, test, F1) = (0.9953, 0.9742, - )  
 	  * チューニングは未
-		  
+
 	CNN
 	- 未
-
-
