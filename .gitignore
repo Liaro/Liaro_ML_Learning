@@ -1,9 +1,9 @@
-/classification/
-/k-NN/
-/mnist/
-/Q-Learning/
-/README.md/
-/regression/
-/signal_analysis/
-/workshop/
+/classification/*
+/k-NN/*
+/mnist/*
+/Q-Learning/*
+/README.md/*
+/regression/*
+/signal_analysis/*
+/workshop/*
 
