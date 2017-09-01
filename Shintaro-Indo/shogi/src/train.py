@@ -1,4 +1,5 @@
 import sys,os
+
 sys.path.append(os.pardir)
 
 from data import fetch_data
