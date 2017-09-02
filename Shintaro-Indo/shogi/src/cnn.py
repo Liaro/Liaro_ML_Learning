@@ -14,7 +14,6 @@ class CNN(chainer.Chain):
         )
 
     def __call__(self, x):
-        x = x.reshape(x.shape[0], 3, 80, 64) # (データ数、チャネル数(色数)、縦、横)の形式にする。
         h = F.relu(self.conv1(x)) # (32, 80, 64)
         h = F.max_pooling_2d(h, 2) # (32, 40, 32)
         h = F.relu(self.conv2(h))  # (32, 40, 32)

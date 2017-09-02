@@ -20,7 +20,7 @@ from chainer import cuda
 from chainer import optimizers
 import chainer.links as L
 
-
+# GPUの設定
 gpu_device = 0
 cuda.get_device(gpu_device).use()
 xp = cuda.cupy
@@ -81,6 +81,7 @@ if __name__ == "__main__":
         ## 読み込み
         koma = fetch_data()
         x = koma.data
+        x = x.reshape(x.shape[0], 3, 80, 64) # (データ数、チャネル数(色数)、縦、横)の形式にする。
         y = koma.target
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
@@ -96,17 +97,19 @@ if __name__ == "__main__":
 
 
         # Step2.モデルの記述
-        models = [
-            MLP(1000),
-            CNN(),
-            ResNetSmall()
-        ]
+        models = {
+            "mlp": MLP(1000),
+            "cnn": CNN(),
+            "resnet": ResNetSmall()
+        }
+
 
 
         # Step3.モデルと最適化アルゴリズムの設定
         model = L.Classifier(models[int(sys.argv[1])]).to_gpu(gpu_device) # モデルの生成(GPU対応)
         print(model)
-        optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
+        # optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
+        optimizer = optimizers.MomentumSGD()
         optimizer.setup(model) # アルゴリズムにモデルをフィット
 
 
