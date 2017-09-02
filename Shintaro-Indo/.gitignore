@@ -1,5 +1,5 @@
 *.ipynb_checkpoints
-*._.DS_Store
+*.DS_Store
 *.python-version
 
 self-study/dataset/mldata/*
@@ -8,5 +8,4 @@ self-study/src/__pyache__/*
 
 shogi/dataset/*
 shogi/notebook/__pyache__/*
-shogi/src/__pyache__/*
-
+shogi/src/__pycache__/*
