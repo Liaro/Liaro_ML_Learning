@@ -103,7 +103,6 @@ if __name__ == "__main__":
         x_test /= x_test.max()
 
 
-
         # モデルと最適化アルゴリズムの設定
         model = L.Classifier(models[sys.argv[1]]).to_gpu(gpu_device) # モデルの生成(GPU対応)
         optimizer = optimizers.Adam() # 最適化アルゴリズムの選択

@@ -1,5 +1,28 @@
 # 将棋の駒画像の分類
 
+**ツリー構造**
+
+	shogi/
+		┣ dataset/← ignore
+			┣ images/
+				┣ annotation_koma_merge/...  
+			┣ pickles/
+				┣ data.pickle
+				┣ target.pickle  
+		┣ notebook/ ← プロトタイプ  
+			┣ load_data.ipynb
+			┣ nn.ipynb
+			┣ non_nn.ipynb
+		┣ src/  
+			┣ data.py： pickleファイルがあれば読み込み， なければ生データからデータセットを作成してpickle化も行う
+			┣ non_nn.py： NN以外の学習  
+			┣ train.py： NNの学習  
+			┣ cnn.py
+			┣ mlp.py
+			┣ resnet.py
+		┣ result/
+
+
 **結果**
 
 	RF
@@ -13,4 +36,7 @@
 	  * チューニングは未
 
 	CNN
-	- (train, test, F1) = (0.9916, 0.9928, - )  
+	- (train, test, F1) = (0.9916, 0.9928, - )    
+
+	ResNet
+	- (train, test, F1) = (0.8905, 0.8846, - )  
