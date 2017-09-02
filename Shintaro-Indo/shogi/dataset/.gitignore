@@ -4,5 +4,7 @@
 # picklesディレクトリはignore
 /pickles/
 
+/pickles.zip
+
 # __pycache__など
 __*/
