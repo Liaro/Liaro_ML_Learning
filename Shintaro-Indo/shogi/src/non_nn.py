@@ -18,12 +18,12 @@ from sklearn.svm import SVC
 
 
 # NNを利用しないモデル
-models = [
-    KNeighborsClassifier(n_jobs=2), # 時間かかる
-    DecisionTreeClassifier(), # 時間かかる
-    RandomForestClassifier(n_jobs=-1), # すぐ終わる
-    SVC() # 時間かかる
-]
+models = {
+    "knn": KNeighborsClassifier(n_jobs=2), # 時間かかる
+    "dt": DecisionTreeClassifier(), # 時間かかる
+    "rf": RandomForestClassifier(n_jobs=-1), # すぐ終わる
+    "svm": SVC() # 時間かかる
+}
 
 # 2値化を行う関数
 def binarization(x_data):
@@ -63,7 +63,7 @@ def plot_confusion_matrix(y_test, y_pred, classes, normalize=False, title='Confu
     plt.show()
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2 and (0 <= int(sys.argv[1]) <= 3): # コマンドライン引数が条件を満たしているとき
+    if len(sys.argv) == 2 and sys.argv[1] in models.keys(): # コマンドライン引数が条件を満たしているとき
         # データの読み込み
         koma = fetch_data() # 駒の種類．混同行列に利用．
         class_names = koma.target_names
@@ -71,8 +71,7 @@ if __name__ == "__main__":
         y = koma.target
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 
-
-        model = models[int(sys.argv[1])] # コマンドライン引数でモデルを選択
+        model = models[sys.argv[1]] # コマンドライン引数でモデルを選択
         clf = model.fit(x_train, y_train)
         y_pred = clf.predict(x_test)
 
@@ -90,4 +89,4 @@ if __name__ == "__main__":
         plt.show()
 
     else: # 例外処理
-        print("please specify the model index (k-NN:0, DT:1, RF:2, SVM:3) like $ python non_nn.py 2 ")
+        print("please specify the model (knn, dt, rf or svm) like $ python non_nn.py rf ")

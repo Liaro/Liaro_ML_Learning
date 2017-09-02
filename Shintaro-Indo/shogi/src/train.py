@@ -7,7 +7,6 @@ from mlp import MLP
 from cnn import CNN
 from resnet import ResNetSmall, ResBlock
 
-import numpy as np
 import time
 from tqdm import tqdm
 
@@ -24,6 +23,14 @@ import chainer.links as L
 gpu_device = 0
 cuda.get_device(gpu_device).use()
 xp = cuda.cupy
+
+
+# モデルの候補
+models = {
+    "mlp": MLP(1000),
+    "cnn": CNN(),
+    "resnet": ResNetSmall()
+}
 
 
 # 訓練データに対する正答率，誤差を表示する関数
@@ -75,9 +82,9 @@ def test(model, x_data, y_data, batchsize=10):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 2 and (0 <= int(sys.argv[1]) <= 2): # コマンドライン引数が条件を満たしているとき
+    if len(sys.argv) == 2 and sys.argv[1] in models.keys(): # コマンドライン引数が条件を満たしているとき
 
-        # Step1.データの準備
+        # データの準備
         ## 読み込み
         koma = fetch_data()
         x = koma.data
@@ -96,24 +103,14 @@ if __name__ == "__main__":
         x_test /= x_test.max()
 
 
-        # Step2.モデルの記述
-        models = {
-            "mlp": MLP(1000),
-            "cnn": CNN(),
-            "resnet": ResNetSmall()
-        }
 
-
-
-        # Step3.モデルと最適化アルゴリズムの設定
-        model = L.Classifier(models[int(sys.argv[1])]).to_gpu(gpu_device) # モデルの生成(GPU対応)
-        print(model)
-        # optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
-        optimizer = optimizers.MomentumSGD()
+        # モデルと最適化アルゴリズムの設定
+        model = L.Classifier(models[sys.argv[1]]).to_gpu(gpu_device) # モデルの生成(GPU対応)
+        optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
         optimizer.setup(model) # アルゴリズムにモデルをフィット
 
 
-        # Step4.学習
+        # 学習
         n_epoch = 10 # 学習回数(学習データを何周するか)
         for epoch in range(1, n_epoch + 1):
             print("\nepoch", epoch)
@@ -125,4 +122,4 @@ if __name__ == "__main__":
             test(model, x_test, y_test, batchsize=100)
 
     else: # 例外処理
-        print("please specify the model index (MLP:0, CNN:1, ResNet:2) like $ python non_nn.py 2 ")
+        print("please specify the model (mlp, cnn or resnet) like $ python train.py cnn ")
