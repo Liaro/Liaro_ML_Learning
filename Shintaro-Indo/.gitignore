@@ -3,11 +3,11 @@
 *.python-version
 
 self-study/dataset/mldata/*
-self-study/notebook/__pyache__/*
-self-study/src/__pyache__/*
+self-study/notebook/__pycache__/*
+self-study/src/__pycache__/*
 
 shogi/dataset/*
-shogi/notebook/__pyache__/*
+shogi/notebook/__pycache__/*
 shogi/src/__pycache__/*
 shogi/notebook/.ipynb_checkpoints/*
 shogi/notebooks/.ipynb_checkpoints/*
