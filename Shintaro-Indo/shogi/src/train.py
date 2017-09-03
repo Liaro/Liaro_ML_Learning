@@ -86,7 +86,7 @@ if __name__ == "__main__":
         ## 読み込み
         koma = load_data()
         x = koma.data
-        x = x.reshape(x.shape[0], 3, 80, 64) # (データ数、チャネル数(色数)、縦、横)の形式にする。
+        x = x.reshape(x.shape[0], 3, 80, 64) # (データ数，チャネル数(色数)，縦，横)の形式にする．
         y = koma.target
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 

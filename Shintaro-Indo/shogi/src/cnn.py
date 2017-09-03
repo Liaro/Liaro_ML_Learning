@@ -1,5 +1,4 @@
 import chainer
-from chainer import Function, Variable, optimizers, Link, Chain
 import chainer.functions as F
 import chainer.links as L
 
