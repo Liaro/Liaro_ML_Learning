@@ -12,7 +12,7 @@ class load_data():
         self.data = [] # 画像を格納するlist．後にarrayに変換．
         self.target = [] # ラベルを格納するlist．後にarrayに変換．
         self.target_names = np.array(["fu", "gin", "hisya", "kaku", "kei", "kin", "kyo", "ou"]) # 成り駒以外の8種類
-        self.main()
+        self.run()
 
     # zipファイルを， zipファイルが存在するディレクトリで展開する関数
     def extract_zip(self, dir_path, file_name): # dir_path：zipファイルが存在するディレクトリへのパス， file_name：zipファイルの名前
@@ -50,7 +50,8 @@ class load_data():
         self.data = np.array(self.data)
         self.target = np.array(self.target)
 
-    def main(self):
+    # リポジトリに存在するデータの状態に応じて読み込みを行う．
+    def run(self):
 
         # pickleのzipしかなければ解凍する
         if ("../dataset/pickle.zip" in glob.glob("../dataset/*")) and "../dataset/pickle" not in glob.glob("../dataset/*"):
@@ -76,5 +77,6 @@ class load_data():
             self.dump_pickle(path="../dataset/pickle/data.pkl", data=self.data) # 画像データpickle化
             self.dump_pickle(path="../dataset/pickle/target.pkl", data=self.target) # ラベルデータをpickle化
 
+        # データがない場合
         else:
             print("You have no available dataset")
