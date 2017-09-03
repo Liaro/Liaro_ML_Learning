@@ -1,8 +1,7 @@
 import sys,os
-
 sys.path.append(os.pardir)
 
-from data import fetch_data
+from load_data import load_data
 from mlp import MLP
 from cnn import CNN
 from resnet import ResNetSmall, ResBlock
@@ -19,18 +18,17 @@ from chainer import cuda
 from chainer import optimizers
 import chainer.links as L
 
-# GPUの設定
-gpu_device = 0
-cuda.get_device(gpu_device).use()
-xp = cuda.cupy
-
-
 # モデルの候補
 models = {
     "mlp": MLP(1000),
     "cnn": CNN(),
     "resnet": ResNetSmall()
 }
+
+# GPUの設定
+gpu_device = 0
+cuda.get_device(gpu_device).use()
+xp = cuda.cupy
 
 
 # 訓練データに対する正答率，誤差を表示する関数
@@ -86,7 +84,7 @@ if __name__ == "__main__":
 
         # データの準備
         ## 読み込み
-        koma = fetch_data()
+        koma = load_data()
         x = koma.data
         x = x.reshape(x.shape[0], 3, 80, 64) # (データ数、チャネル数(色数)、縦、横)の形式にする。
         y = koma.target

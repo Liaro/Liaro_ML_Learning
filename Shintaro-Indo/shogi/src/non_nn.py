@@ -1,6 +1,6 @@
 import sys,os
 sys.path.append(os.pardir)
-from data import fetch_data
+from load_data import load_data
 
 import numpy as np
 import itertools
@@ -25,6 +25,7 @@ models = {
     "svm": SVC() # 時間かかる
 }
 
+
 # 2値化を行う関数
 def binarization(x_data):
     # グレースケール化
@@ -34,6 +35,7 @@ def binarization(x_data):
     x_data = np.array([cv2.threshold(img, 170, 255, cv2.THRESH_BINARY)[1] for img in x_data])
 
     return x_data
+
 
 # 混同行列を描画する関数
 def plot_confusion_matrix(y_test, y_pred, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
@@ -62,10 +64,13 @@ def plot_confusion_matrix(y_test, y_pred, classes, normalize=False, title='Confu
     plt.xlabel('Predicted label')
     plt.show()
 
+
 if __name__ == "__main__":
+
     if len(sys.argv) == 2 and sys.argv[1] in models.keys(): # コマンドライン引数が条件を満たしているとき
+
         # データの読み込み
-        koma = fetch_data() # 駒の種類．混同行列に利用．
+        koma = load_data() # 駒の種類．混同行列に利用．
         class_names = koma.target_names
         x = koma.data.reshape(koma.data.shape[0], -1) # 一次元化
         y = koma.target
