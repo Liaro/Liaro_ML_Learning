@@ -32,11 +32,11 @@
 	　* kNNN，SVMはCPUだと時間ががかるので保留中
 
 	MLP
-	- (train, test, F1) = (0.9953, 0.9742, - )  
+	- (train, test, F1) = (0.9035, 0.8631, - )  
 	  * チューニングは未
 
 	CNN
 	- (train, test, F1) = (0.9916, 0.9928, - )    
 
 	ResNet
-	- (train, test, F1) = (0.8905, 0.8846, - )
+	- (train, test, F1) = (0.9834, 0.97765, - )
