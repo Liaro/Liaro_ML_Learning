@@ -121,4 +121,4 @@ if __name__ == "__main__":
             test(model, x_test, y_test, batchsize=100)
 
     else: # 例外処理
-        print("please specify the model (mlp, cnn or resnet) like $ python train.py cnn ")
+        print("please specify the model (mlp, cnn or resnet) like $ python train.py cnn")
