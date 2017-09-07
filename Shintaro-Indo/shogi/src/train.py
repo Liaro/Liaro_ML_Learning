@@ -18,6 +18,7 @@ from chainer import cuda
 from chainer import optimizers
 import chainer.links as L
 
+
 # モデルの候補
 models = {
     "mlp": MLP(1000),
@@ -25,10 +26,33 @@ models = {
     "resnet": ResNetSmall()
 }
 
+
 # GPUの設定
 gpu_device = 0
 cuda.get_device(gpu_device).use()
 xp = cuda.cupy
+
+
+# 前処理
+def preprocessing():
+    ## 読み込み
+    koma = load_data()
+    x = koma.data
+    x = x.reshape(x.shape[0], 3, 80, 64) # (データ数，チャネル数(色数)，縦，横)の形式にする．
+    y = koma.target
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+
+    ## Chainerでは実数のタイプはfloat32, 整数のタイプはint32に固定しておく必要がある．
+    x_train = x_train.astype(xp.float32) # (40681, 80, 64, 3)
+    y_train = y_train.astype(xp.int32) # (40681,)
+    x_test = x_test.astype(xp.float32)
+    y_test = y_test.astype(xp.int32)
+
+    ## 輝度を揃える
+    x_train /= x_train.max()
+    x_test /= x_test.max()
+    return x_train, y_train, x_test, y_test
+
 
 
 # 訓練データに対する正答率，誤差を表示する関数
@@ -83,22 +107,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] in models.keys(): # コマンドライン引数が条件を満たしているとき
 
         # データの準備
-        ## 読み込み
-        koma = load_data()
-        x = koma.data
-        x = x.reshape(x.shape[0], 3, 80, 64) # (データ数，チャネル数(色数)，縦，横)の形式にする．
-        y = koma.target
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
-
-        ## Chainerでは実数のタイプはfloat32, 整数のタイプはint32に固定しておく必要がある．
-        x_train = x_train.astype(xp.float32) # (40681, 80, 64, 3)
-        y_train = y_train.astype(xp.int32) # (40681,)
-        x_test = x_test.astype(xp.float32)
-        y_test = y_test.astype(xp.int32)
-
-        ## 輝度を揃える
-        x_train /= x_train.max()
-        x_test /= x_test.max()
+        x_train, y_train, x_test, y_test = proprocessing()
 
 
         # モデルと最適化アルゴリズムの設定

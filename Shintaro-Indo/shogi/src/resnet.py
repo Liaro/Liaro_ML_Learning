@@ -31,10 +31,10 @@ class ResNetSmall(chainer.Chain):
         super(ResNetSmall, self).__init__(
             conv1 = L.Convolution2D(3, 32, 5, initialW=initializers.HeNormal()),
             bn1 = L.BatchNormalization(32),
-            res1= ResBlock(32, 32),
-            res2= ResBlock(32, 32),
-            res3= ResBlock(32, 32),
-            fc=L.Linear(None, 10),
+            res1 = ResBlock(32, 32),
+            res2 = ResBlock(32, 32),
+            res3 = ResBlock(32, 32),
+            fc = L.Linear(None, 10),
         )
 
     def __call__(self, x):
