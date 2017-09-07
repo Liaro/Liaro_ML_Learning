@@ -59,7 +59,7 @@ class load_data(): # 注：パスは全てload_dataを読み込むファイル�
             self.extract_zip(dir_path="../dataset/", file_name="pickle.zip")
 
         # pickleファイルがあればそこから読み込む
-        elif "../dataset/pickle" in glob.glob("../dataset/*"):
+        elif "../dataset/pickle/data.pkl" in glob.glob("../dataset/*"):
             self.data = self.load_pickle(path="../dataset/pickle/data.pkl")
             self.target = self.load_pickle(path="../dataset/pickle/target.pkl")
 
