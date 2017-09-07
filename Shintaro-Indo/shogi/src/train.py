@@ -54,6 +54,11 @@ def preprocessing():
     return x_train, y_train, x_test, y_test
 
 
+# 二値化
+def threshold(x_train, x_test):
+
+
+
 
 # 訓練データに対する正答率，誤差を表示する関数
 def train(model, optimizer, x_data, y_data, batchsize=10):
