@@ -55,7 +55,7 @@ def preprocessing():
 
 
 # 二値化
-def threshold(x_train, x_test):
+# def threshold(x_train, x_test):
 
 
 
