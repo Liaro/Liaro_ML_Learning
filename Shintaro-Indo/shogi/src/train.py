@@ -54,6 +54,11 @@ def preprocessing():
     return x_train, y_train, x_test, y_test
 
 
+# 二値化
+def threshold(x_train, x_test):
+
+
+
 
 # 訓練データに対する正答率，誤差を表示する関数
 def train(model, optimizer, x_data, y_data, batchsize=10):
@@ -109,12 +114,10 @@ if __name__ == "__main__":
         # データの準備
         x_train, y_train, x_test, y_test = proprocessing()
 
-
         # モデルと最適化アルゴリズムの設定
         model = L.Classifier(models[sys.argv[1]]).to_gpu(gpu_device) # モデルの生成(GPU対応)
         optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
         optimizer.setup(model) # アルゴリズムにモデルをフィット
-
 
         # 学習
         n_epoch = 10 # 学習回数(学習データを何周するか)
