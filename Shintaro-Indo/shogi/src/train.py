@@ -107,7 +107,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] in models.keys(): # コマンドライン引数が条件を満たしているとき
 
         # データの準備
-        x_train, y_train, x_test, y_test = proprocessing()
+        x_train, y_train, x_test, y_test = preprocessing()
 
         # モデルと最適化アルゴリズムの設定
         model = L.Classifier(models[sys.argv[1]]).to_gpu(gpu_device) # モデルの生成(GPU対応)
