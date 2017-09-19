@@ -1,9 +1,0 @@
-*.ipynb_checkpoints
-*.DS_Store
-*.python-version
-
-dataset/*
-notebook/__pycache__/*
-src/__pycache__/*
-notebook/.ipynb_checkpoints/*
-notebooks/.ipynb_checkpoints/*
