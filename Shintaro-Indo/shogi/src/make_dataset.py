@@ -9,6 +9,7 @@ import os
 
 # load_data.data, load_data.target, load_data.target_namesで，それぞれ画像，ラベル，クラス名にアクセスできる．全てarray．
 class load_data(): # 注：パスは全てload_dataを読み込むファイルを起点とする．
+
     def __init__(self):
         self.data = [] # 画像を格納するlist．後にarrayに変換．
         self.target = [] # ラベルを格納するlist．後にarrayに変換．
@@ -32,6 +33,7 @@ class load_data(): # 注：パスは全てload_dataを読み込むファイル�
 
     # 生データからデータセットを作るメソッド(trainとtestの分け方はランダム)
     def make_dataset(self, size=(64, 80)):
+
         # 生データが存在するディレクトリへのパス
         dir_path = "../dataset/image/annotation_koma_merge/"
 
@@ -53,6 +55,7 @@ class load_data(): # 注：パスは全てload_dataを読み込むファイル�
 
     # データセットに存在するデータの種類に応じて格納を行うメインメソッド
     def run(self):
+
         # pickleのzipしかなければ解凍する
         if ("../dataset/pickle.zip" in glob.glob("../dataset/*")) and ("../dataset/pickle" not in glob.glob("../dataset/*")):
             self.extract_zip(dir_path="../dataset/", file_name="pickle.zip")

@@ -1,7 +1,7 @@
 import sys,os
 sys.path.append(os.pardir)
 
-from load_data import load_data
+from make_dataset import load_data
 from mlp import MLP
 from cnn import CNN
 from resnet import ResNetSmall, ResBlock
@@ -76,7 +76,7 @@ def train(model, optimizer, x_data, y_data, batchsize=10):
         x = chainer.Variable(xp.asarray(x_data[i: i+batchsize]))
         t = chainer.Variable(xp.asarray(y_data[i: i+batchsize]))
 
-        optimizer.update(model, x, t　# パラメータの更新
+        optimizer.update(model, x, t)# パラメータの更新
 
         sum_loss += float(model.loss.data) * len(t.data) # 累計誤差を更新
         sum_accuracy += float(model.accuracy.data) * len(t.data) # 累計正答率を更新
@@ -138,7 +138,13 @@ if __name__ == "__main__":
             train(model, optimizer, x_train, y_train, batchsize=100)
             test(model, x_test, y_test, batchsize=100)
 
-        # Step4. モデルの保存
+        # Step4. 結果の表示
+        x = chainer.Variable(xp.asarray(x_test))
+        t = chainer.Variable(xp.asarray(y_test))
+        y_pred = model(x,t).y
+        plot_confusion_matrix(y_test, y-pred)
+
+        # Step5. モデルの保存
         model.to_cpu() # CPUで計算できるようにしておく
         serializers.save_npz("{}.npz".format(model_name), model) # npz形式で書き出し
 
