@@ -12,7 +12,7 @@ from sklearn.neighbors import  KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import  DecisionTreeClassifier
 
-from make_dataset import load_data
+from make_dataset import LoadData
 from visualize import plot_confusion_matrix
 
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         model_name = sys.argv[1]
 
         # データの準備
-        koma = load_data() # 駒の種類．混同行列に利用．
+        koma = LoadData() # 駒の種類．混同行列に利用．
         class_names = koma.target_names
         x = koma.data.reshape(koma.data.shape[0], -1) # 一次元化
         y = koma.target
@@ -55,7 +55,8 @@ if __name__ == "__main__":
         print(model.__class__.__name__)
         print("train:", clf.score(x_train, y_train))
         print("test:", clf.score(x_test, y_test))
-        print("F1: ", f1_score(y_test[:len(y_pred)], y_pred, average='macro'))
+        print("F1: ", f1_score(y_test[:len(y_pred)], y_pred,
+            average='macro'))
 
         ## 正規化前の混合行列の可視化
         plot_confusion_matrix(y_test, y_pred, classes=class_names,
@@ -64,8 +65,6 @@ if __name__ == "__main__":
         ##  正規化後の混合行列の可視化
         plot_confusion_matrix(y_test, y_pred, classes=class_names,
             normalize=True, title='Normalized confusion matrix')
-
-        plt.show()
 
         # モデルの保存
         joblib.dump(clf, "../result/{}.pkl".format(sys.argv[1]))

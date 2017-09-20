@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 
 from cnn import CNN
-from make_dataset import load_data
+from make_dataset import LoadData
 from mlp import MLP
 from resnet import ResNetSmall, ResBlock
 
@@ -41,7 +41,7 @@ def preprocessing():
     """
 
     # データの読み込み
-    koma = load_data()
+    koma = LoadData()
     x = koma.data
     x = x.reshape(x.shape[0], 3, 80, 64) # (データ数，チャネル数，縦，横)の形式にする
     y = koma.target

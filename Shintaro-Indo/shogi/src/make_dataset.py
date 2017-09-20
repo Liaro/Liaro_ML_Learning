@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 
 
-class load_data():
+class LoadData():
     """
     load_data.data：画像
     load_data.target：ラベル
