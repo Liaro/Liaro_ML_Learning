@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
         ## 学習済みモデルが存在する場合は利用する
         try:
-            serializers.load_npz("{}.npz".format(model_name), model)
+            serializers.load_npz("../result{}.npz".format(model_name), model)
         except:
             pass
 
@@ -138,7 +138,7 @@ if __name__ == "__main__":
             train(model, optimizer, x_train, y_train, batchsize=100)
             test(model, x_test, y_test, batchsize=100)
 
-        # Step4. 結果の表示
+        # Step4. 結果の表示(EC2で実行するとメモリ不足になったためコメントアウト)
         # x = chainer.Variable(xp.asarray(x_test))
         # t = chainer.Variable(xp.asarray(y_test))
         # y_pred = model(x,t).y
@@ -146,7 +146,7 @@ if __name__ == "__main__":
 
         # Step5. モデルの保存
         model.to_cpu() # CPUで計算できるようにしておく
-        serializers.save_npz("{}.npz".format(model_name), model) # npz形式で書き出し
+        serializers.save_npz("../result/{}.npz".format(model_name), model) # npz形式で書き出し
 
     else: # コマンドライン引数が条件を満たさないとき
         print("please specify the model (mlp, cnn or resnet) like $ python train.py cnn")
