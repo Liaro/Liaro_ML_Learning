@@ -2,6 +2,7 @@ import chainer
 import chainer.functions as F
 import chainer.links as L
 
+
 class MLP(chainer.Chain):
     def __init__(self, n_units):
         super(MLP, self).__init__(

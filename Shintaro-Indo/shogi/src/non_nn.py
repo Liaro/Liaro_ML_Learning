@@ -1,7 +1,7 @@
-import numpy as np
-import os
 import sys
+import os
 
+import numpy as np
 import cv2
 from PIL import Image
 from sklearn.ensemble import RandomForestClassifier
@@ -29,7 +29,8 @@ if __name__ == "__main__":
 
     sys.path.append(os.pardir)
 
-    if len(sys.argv) == 2 and sys.argv[1] in models.keys(): # コマンドライン引数が条件を満たしているとき
+    # コマンドライン引数が条件を満たしているとき
+    if len(sys.argv) == 2 and sys.argv[1] in models.keys():
         model_name = sys.argv[1]
 
         # データの準備
@@ -37,7 +38,8 @@ if __name__ == "__main__":
         class_names = koma.target_names
         x = koma.data.reshape(koma.data.shape[0], -1) # 一次元化
         y = koma.target
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+        x_train, x_test, y_train, y_test = train_test_split(x, y,
+            test_size=0.3, random_state=42)
 
         model = models[model_name] # コマンドライン引数からモデルを選択
 
@@ -56,15 +58,19 @@ if __name__ == "__main__":
         print("F1: ", f1_score(y_test[:len(y_pred)], y_pred, average='macro'))
 
         ## 正規化前の混合行列の可視化
-        plot_confusion_matrix(y_test, y_pred, classes=class_names, title='Confusion matrix, without normalization')
+        plot_confusion_matrix(y_test, y_pred, classes=class_names,
+            title='Confusion matrix, without normalization')
 
         ##  正規化後の混合行列の可視化
-        plot_confusion_matrix(y_test, y_pred, classes=class_names, normalize=True, title='Normalized confusion matrix')
+        plot_confusion_matrix(y_test, y_pred, classes=class_names,
+            normalize=True, title='Normalized confusion matrix')
 
         plt.show()
 
         # モデルの保存
         joblib.dump(clf, "../result/{}.pkl".format(sys.argv[1]))
 
-    else: # 例外処理
-        print("please specify the model (knn, dt, rf or svm) like $ python non_nn.py rf ")
+    # 例外処理
+    else:
+        print("please specify the model (knn, dt, rf or svm)\
+            like $ python non_nn.py rf ")

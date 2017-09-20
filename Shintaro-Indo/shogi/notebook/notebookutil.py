@@ -9,6 +9,7 @@ from nbformat import read
 
 
 def find_notebook(fullname, path=None):
+
     name = fullname.rsplit('.', 1)[-1]
     if not path:
         path = ['']
@@ -22,6 +23,7 @@ def find_notebook(fullname, path=None):
 
 
 class NotebookLoader(object):
+
     def __init__(self, path=None):
         self.shell = InteractiveShell.instance()
         self.path = path
@@ -40,7 +42,8 @@ class NotebookLoader(object):
         try:
           for cell in nb.cells:
             if cell.cell_type == 'code':
-                code = self.shell.input_transformer_manager.transform_cell(cell.source)
+                code = self.shell.input_transformer_manager.transform_cell(
+                    cell.source)
                 exec(code, mod.__dict__)
         finally:
             self.shell.user_ns = save_user_ns
@@ -48,6 +51,7 @@ class NotebookLoader(object):
 
 
 class NotebookFinder(object):
+
     def __init__(self):
         self.loaders = {}
 

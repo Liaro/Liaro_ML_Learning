@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import confusion_matrix
 
+
 # 混同行列を描画する関数
 def plot_confusion_matrix(y_test, y_pred, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
     cm = confusion_matrix(y_test, y_pred) # 混同行列の作成

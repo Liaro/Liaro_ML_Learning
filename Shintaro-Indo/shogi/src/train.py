@@ -1,9 +1,8 @@
-import numpy as np
-import os
 import sys
 import time
-from tqdm import tqdm
 
+import numpy as np
+from tqdm import tqdm
 import chainer
 import chainer.links as L
 from chainer import cuda, optimizers, serializers
@@ -36,15 +35,18 @@ except:
     xp = np
 
 
-# 前処理
 def preprocessing():
+    """
+    前処理
+    """
 
     # データの読み込み
     koma = load_data()
     x = koma.data
     x = x.reshape(x.shape[0], 3, 80, 64) # (データ数，チャネル数，縦，横)の形式にする
     y = koma.target
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+    x_train, x_test, y_train, y_test = train_test_split(x, y,
+        test_size=0.3, random_state=42)
 
     # Chainerでは数値データを32bit型にする必要がある．
     x_train = x_train.astype(xp.float32) # (40681, 80, 64, 3)
@@ -81,7 +83,8 @@ def train(model, optimizer, x_data, y_data, batchsize=10):
     elapsed_time = end - start # 所要時間
     throughput = N / elapsed_time # 単位時間当たりの作業量
 
-    print("train mean loss={}, accuracy={}, throughput={} image/sec".format(sum_loss / N, sum_accuracy / N, throughput))
+    print("train mean loss={}, accuracy={}, throughput={} image/sec"
+        .format(sum_loss / N, sum_accuracy / N, throughput))
 
 
 # テストデータに対する正答率，誤差を表示する関数
@@ -100,14 +103,14 @@ def test(model, x_data, y_data, batchsize=10):
         sum_loss += float(loss.data) * len(t.data)
         sum_accuracy += float(model.accuracy.data) * len(t.data)
 
-    print("test mean loss={}, accuracy={}".format(sum_loss / N, sum_accuracy / N))
+    print("test mean loss={}, accuracy={}"
+        .format(sum_loss / N, sum_accuracy / N))
 
 
 if __name__ == "__main__":
 
-    sys.path.append(os.pardir)
-
-    if len(sys.argv) == 2 and sys.argv[1]  in models.keys(): # コマンドライン引数が条件を満たしているとき
+    # コマンドライン引数が条件を満たしているとき
+    if len(sys.argv) == 2 and sys.argv[1]  in models.keys():
 
         # Step1. データの準備
         x_train, y_train, x_test, y_test = preprocessing()
@@ -144,7 +147,8 @@ if __name__ == "__main__":
 
         # Step5. モデルの保存
         model.to_cpu() # CPUで計算できるようにしておく
-        serializers.save_npz("../result/{}.npz".format(model_name), model) # npz形式で書き出し
+        serializers.save_npz("../result/{}.npz".format(model_name), model)
 
     else: # コマンドライン引数が条件を満たさないとき
-        print("please specify the model (mlp, cnn or resnet) like $ python train.py cnn")
+        print("please specify the model (mlp, cnn or resnet) \
+            like $ python train.py cnn")
