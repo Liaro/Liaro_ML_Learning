@@ -139,10 +139,10 @@ if __name__ == "__main__":
             test(model, x_test, y_test, batchsize=100)
 
         # Step4. 結果の表示
-        x = chainer.Variable(xp.asarray(x_test))
-        t = chainer.Variable(xp.asarray(y_test))
-        y_pred = model(x,t).y
-        plot_confusion_matrix(y_test, y-pred)
+        # x = chainer.Variable(xp.asarray(x_test))
+        # t = chainer.Variable(xp.asarray(y_test))
+        # y_pred = model(x,t).y
+        # plot_confusion_matrix(y_test, y_pred)
 
         # Step5. モデルの保存
         model.to_cpu() # CPUで計算できるようにしておく
