@@ -45,16 +45,17 @@ if __name__ == "__main__":
 
         # 学習済みモデルがあれば利用し，なければ学習させる
         try:
-            clf = joblib.load("../result/{}.pkl".format(model_name))
+            classifier = joblib.load("../result/{}.pkl"
+                .format(model_name))
         except:
-            clf = model.fit(x_train, y_train)
+            classifier = model.fit(x_train, y_train)
 
-        y_pred = clf.predict(x_test)  # 予測
+        y_pred = classifier.predict(x_test)  # 予測
 
         # 結果の表示
         print(model.__class__.__name__)
-        print("train:", clf.score(x_train, y_train))
-        print("test:", clf.score(x_test, y_test))
+        print("train:", classifier.score(x_train, y_train))
+        print("test:", classifier.score(x_test, y_test))
         print("F1: ", f1_score(y_test[:len(y_pred)], y_pred,
             average='macro'))
 
@@ -67,7 +68,7 @@ if __name__ == "__main__":
             normalize=True, title='Normalized confusion matrix')
 
         # モデルの保存
-        joblib.dump(clf, "../result/{}.pkl".format(sys.argv[1]))
+        joblib.dump(classifier, "../result/{}.pkl".format(sys.argv[1]))
 
     # 例外処理
     else:

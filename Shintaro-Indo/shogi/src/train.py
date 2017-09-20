@@ -43,7 +43,7 @@ def preprocessing():
     # データの読み込み
     koma = LoadData()
     x = koma.data
-    x = x.reshape(x.shape[0], 3, 80, 64) # (データ数，チャネル数，縦，横)の形式にする
+    x = x.reshape(x.shape[0], 3, 80, 64) # (データ数，チャネル数，縦，横)に
     y = koma.target
     x_train, x_test, y_train, y_test = train_test_split(x, y,
         test_size=0.3, random_state=42)
@@ -63,7 +63,7 @@ def preprocessing():
 # 訓練データに対する正答率，誤差を表示する関数
 def train(model, optimizer, x_data, y_data, batchsize=10):
 
-    x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替える
+    x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替え
     N = x_data.shape[0] # データ数
     sum_accuracy = 0 # 累計正答率
     sum_loss = 0 # 累計誤差
@@ -74,10 +74,9 @@ def train(model, optimizer, x_data, y_data, batchsize=10):
         x = chainer.Variable(xp.asarray(x_data[i: i+batchsize]))
         t = chainer.Variable(xp.asarray(y_data[i: i+batchsize]))
 
-        optimizer.update(model, x, t)# パラメータの更新
-
-        sum_loss += float(model.loss.data) * len(t.data) # 累計誤差を更新
-        sum_accuracy += float(model.accuracy.data) * len(t.data) # 累計正答率を更新
+        optimizer.update(model, x, t)
+        sum_loss += float(model.loss.data) * len(t.data)
+        sum_accuracy += float(model.accuracy.data) * len(t.data)
 
     end = time.time() # 終了時刻
     elapsed_time = end - start # 所要時間
@@ -90,7 +89,7 @@ def train(model, optimizer, x_data, y_data, batchsize=10):
 # テストデータに対する正答率，誤差を表示する関数
 def test(model, x_data, y_data, batchsize=10):
 
-    x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替える
+    x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替え
     N = x_data.shape[0] # データ数
     sum_accuracy = 0 # 累計正答率
     sum_loss = 0 # 累計誤差
@@ -121,7 +120,8 @@ if __name__ == "__main__":
 
         ## 学習済みモデルが存在する場合は利用する
         try:
-            serializers.load_npz("../result{}.npz".format(model_name), model)
+            serializers.load_npz("../result{}.npz".format(model_name),
+                model)
         except:
             pass
 
