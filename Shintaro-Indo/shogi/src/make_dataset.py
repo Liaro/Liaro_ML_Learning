@@ -1,5 +1,6 @@
 import glob
 import os
+import os.path
 import pickle
 from zipfile import ZipFile
 
@@ -14,8 +15,8 @@ class LoadData():
     load_data.data：画像
     load_data.target：ラベル
     load_data.target_names：クラス名
-    注1：上記3つは全てarray．
-    注2：パスは全てdatasetを読み込むファイルを起点とする．
+    注1：上記3つは全てarray
+    注2：パスは全てmake_datasetモジュールを読み込むファイルを起点とする
     """
 
     def __init__(self):
@@ -25,14 +26,14 @@ class LoadData():
             "fu", "gin", "hisya", "kaku", "kei", "kin", "kyo", "ou"])
         self.run()
 
-    def extract_zip(self, dir_path, file_name): #
+    def extract_zip(self, zip_dir_path, file_name): #
         """
         zipファイルを， zipファイルが存在するディレクトリで展開するメソッド
-        input：dir_path zipファイルが存在するディレクトリへのパス
+        input：zip_dir_path zipファイルが存在するディレクトリへのパス
         input：file_name zipファイルの名前
         """
-        with ZipFile(dir_path + file_name, "r") as z:
-            z.extractall(dir_path)
+        with ZipFile(zip_dir_path + file_name, "r") as z:
+            z.extractall(zip_dir_path)
 
     def load_pickle(self, path):
         """
@@ -56,13 +57,13 @@ class LoadData():
         """
 
         # 生データが存在するディレクトリへのパス
-        dir_path = "../dataset/image/annotation_koma_merge/"
+        data_dir_path = "../dataset/image/annotation_koma_merge/"
 
         # 各クラスごとに， 画像をself.dataに、ラベルをself.targetに格納する。
         for target, target_name in enumerate(self.target_names):
 
             # 画像へのパスを作成
-            data_paths = glob.glob(dir_path + target_name + "/*")
+            data_paths = glob.glob(data_dir_path + target_name + "/*")
 
             # 格納
             for data_path in data_paths:
@@ -79,26 +80,24 @@ class LoadData():
         データセットに存在するデータの種類に応じて格納を行うメインメソッド
         """
         # pickleのzipしかなければ解凍する
-        if (("../dataset/pickle.zip" in glob.glob("../dataset/*"))
-                and ("../dataset/pickle" not in glob.glob("../dataset/*"))):
-            self.extract_zip(dir_path="../dataset/", file_name="pickle.zip")
+        if (os.path.exists("../dataset/pickle.zip")
+                and (os.path.exists("../dataset/pickle"))):
+            self.extract_zip(data_dir_path="../dataset/",
+                             file_name="pickle.zip")
 
         # pickleファイルがあればそこから読み込む
-        elif "../dataset/pickle" in glob.glob("../dataset/*"):
+        elif os.path.exists("../dataset/pickle"):
             self.data = self.load_pickle(path="../dataset/pickle/data.pkl")
             self.target = self.load_pickle(path="../dataset/pickle/target.pkl")
 
         # 生データのzipしかなければ解凍する
-        elif (("../dataset/image/annotation_koma_merge.zip"
-                in glob.glob("../dataset/image/*"))
-                and("../dataset/image/annotation_koma_merge"
-                not in glob.glob("../dataset/image/*"))):
-            self.extract_zip(dir_path="../dataset/image/",
+        elif (os.path.exists("../dataset/image/annotation_koma_merge.zip")
+                and os.path.exists("../dataset/image/annotation_koma_merge")):
+            self.extract_zip(data_dir_path="../dataset/image/",
                              file_name="annotation_koma_merge.zip")
 
         # 生データからデータセットを作成し， pickle化する
-        elif ("../dataset/image/annotation_koma_merge"
-                in glob.glob("../dataset/image/*")):
+        elif os.path.exists("../dataset/image/annotation_koma_merge"):
 
             # データセットを作成
             self.make_dataset()
