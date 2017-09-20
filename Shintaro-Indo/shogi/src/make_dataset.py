@@ -1,11 +1,12 @@
-import numpy as np
-import pickle
 import glob
+import os
+import pickle
+from zipfile import ZipFile
+
+import numpy as np
+from PIL import Image
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
-from PIL import Image
-from zipfile import ZipFile
-import os
 
 # load_data.data, load_data.target, load_data.target_namesで，それぞれ画像，ラベル，クラス名にアクセスできる．全てarray．
 class load_data(): # 注：パスは全てload_dataを読み込むファイルを起点とする．

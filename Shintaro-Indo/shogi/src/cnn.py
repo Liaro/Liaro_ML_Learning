@@ -19,4 +19,4 @@ class CNN(chainer.Chain):
         h = F.max_pooling_2d(h, 2) # (32, 20, 16)
         h = F.relu(self.conv3(h)) # (64, 20, 16)
         h = F.dropout(F.relu(self.fc4(h)), ratio=0.5) # (64, 10, 8)
-        return self.fc5(h)
+        return self.fc5(h)     

@@ -1,7 +1,12 @@
-import io, os, sys, types
+import io
+import os
+import sys
+import types
+
 from IPython import get_ipython
-from nbformat import read
 from IPython.core.interactiveshell import InteractiveShell
+from nbformat import read
+
 
 def find_notebook(fullname, path=None):
     name = fullname.rsplit('.', 1)[-1]
@@ -14,6 +19,7 @@ def find_notebook(fullname, path=None):
         nb_path = nb_path.replace("_", " ")
         if os.path.isfile(nb_path):
             return nb_path
+
 
 class NotebookLoader(object):
     def __init__(self, path=None):
@@ -39,6 +45,7 @@ class NotebookLoader(object):
         finally:
             self.shell.user_ns = save_user_ns
         return mod
+
 
 class NotebookFinder(object):
     def __init__(self):

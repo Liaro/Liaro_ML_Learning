@@ -1,24 +1,20 @@
-import sys,os
-sys.path.append(os.pardir)
-
-from make_dataset import load_data
-from mlp import MLP
-from cnn import CNN
-from resnet import ResNetSmall, ResBlock
-
+import numpy as np
+import os
+import sys
 import time
 from tqdm import tqdm
-import numpy as np
-
-from sklearn.utils import shuffle
-from sklearn.metrics import f1_score
-from sklearn.model_selection import train_test_split
 
 import chainer
-from chainer import cuda
-from chainer import optimizers
 import chainer.links as L
-from chainer import serializers
+from chainer import cuda, optimizers, serializers
+from sklearn.metrics import f1_score
+from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
+
+from cnn import CNN
+from make_dataset import load_data
+from mlp import MLP
+from resnet import ResNetSmall, ResBlock
 
 
 # モデルの候補
@@ -29,7 +25,7 @@ models = {
 }
 
 
-# GPUを使える場合はGPU対応に
+# GPUを使える場合はGPU対応
 gpu = False # True：GPU使用可能，False：GPU使用不可
 try:
     gpu_device = 0
@@ -108,6 +104,8 @@ def test(model, x_data, y_data, batchsize=10):
 
 
 if __name__ == "__main__":
+
+    sys.path.append(os.pardir)
 
     if len(sys.argv) == 2 and sys.argv[1]  in models.keys(): # コマンドライン引数が条件を満たしているとき
 

@@ -1,20 +1,22 @@
-#(入力チャネル数，出力フィルタ数，カーネルサイズ，ストライド(1)，パディング(0)）
-# xを足すので，入力サイズと揃える必要あり
-
 import chainer
+from chainer import initializers
 import chainer.functions as F
 import chainer.links as L
-from chainer import initializers
+
 
 class ResBlock(chainer.Chain):
 
     def __init__(self, in_size, ch):
         super(ResBlock, self).__init__(
-            conv1 = L.Convolution2D(in_size, ch, 1, 1, 0, initialW=initializers.HeNormal(), nobias=True),
+            conv1 = L.Convolution2D(
+                in_size, ch, 1, 1, 0, # (入力チャネル数，出力フィルタ数，カーネルサイズ，ストライド(1)，パディング(0)）
+                initialW=initializers.HeNormal(), nobias=True),
             bn1 = L.BatchNormalization(ch),
-            conv2 = L.Convolution2D(ch, ch, 3, 1, 1, initialW=initializers.HeNormal(), nobias=True),
+            conv2 = L.Convolution2D(
+                ch, ch, 3, 1, 1,
+                initialW=initializers.HeNormal(), nobias=True),
             bn2 = L.BatchNormalization(ch),
-            conv3 = L.Convolution2D(ch, in_size, 1, 1, 0, initialW=initializers.HeNormal(), nobias=True),
+            conv3 = L.Convolution2D(ch, in_size, 1, 1, 0, initialW=initializers.HeNormal(), nobias=True),  # xを足すので，入力サイズと揃える必要あり
             bn3 = L.BatchNormalization(in_size),
         )
 

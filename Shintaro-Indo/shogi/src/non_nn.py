@@ -1,22 +1,19 @@
-import sys,os
-sys.path.append(os.pardir)
-from make_dataset import load_data
-from visualize import plot_confusion_matrix
-
 import numpy as np
-import itertools
+import os
+import sys
+
 import cv2
 from PIL import Image
-import matplotlib.pyplot as plt
-
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.externals import joblib
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
 from sklearn.neighbors import  KNeighborsClassifier
-from sklearn.tree import  DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-from sklearn.externals import joblib
+from sklearn.tree import  DecisionTreeClassifier
+
+from make_dataset import load_data
+from visualize import plot_confusion_matrix
 
 
 # NNを利用しないモデルの候補
@@ -29,6 +26,8 @@ models = {
 
 
 if __name__ == "__main__":
+
+    sys.path.append(os.pardir)
 
     if len(sys.argv) == 2 and sys.argv[1] in models.keys(): # コマンドライン引数が条件を満たしているとき
         model_name = sys.argv[1]
@@ -44,11 +43,11 @@ if __name__ == "__main__":
 
         # 学習済みモデルがあれば利用し，なければ学習させる
         try:
-            clf = joblib.load("../result/{}.pkl".format(model_name)) ．
+            clf = joblib.load("../result/{}.pkl".format(model_name))
         except:
             clf = model.fit(x_train, y_train)
 
-        y_pred = clf.predict(x_test)　# 予測
+        y_pred = clf.predict(x_test)  # 予測
 
         # 結果の表示
         print(model.__class__.__name__)
