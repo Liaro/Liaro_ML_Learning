@@ -122,7 +122,8 @@ if __name__ == "__main__":
         try:
             serializers.load_npz("../result{}.npz".format(model_name),
                 model)
-        except:
+            raise ImportError("No module named {}.npz".format(model_name))
+        except ImportError as e:
             pass
 
         ## GPUが使える場合はGPU対応に，

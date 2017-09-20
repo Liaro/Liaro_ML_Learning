@@ -47,7 +47,8 @@ if __name__ == "__main__":
         try:
             classifier = joblib.load("../result/{}.pkl"
                 .format(model_name))
-        except:
+            raise ImportError("No module named {}.pkl".format(model_name))
+        except ImportError as e:
             classifier = model.fit(x_train, y_train)
 
         y_pred = classifier.predict(x_test)  # 予測
