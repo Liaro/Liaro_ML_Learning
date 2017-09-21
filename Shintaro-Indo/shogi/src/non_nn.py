@@ -50,7 +50,7 @@ def run(model_name):
 
     # データの準備
     koma = LoadData() # 駒の種類．混同行列に利用．
-    class_names = koma.target_names
+    target_names = koma.target_names
     x = koma.data.reshape(koma.data.shape[0], -1) # 一次元化
     y = koma.target_ids
     x_train, x_test, y_train, y_test = train_test_split(x, y,
@@ -77,11 +77,11 @@ def run(model_name):
     print("F1: ", f1_score(y_test[:len(y_pred)], y_pred, average='macro'))
 
     ## 正規化前の混合行列の可視化
-    plot_confusion_matrix(y_test, y_pred, classes=class_names,
+    plot_confusion_matrix(y_test, y_pred, classes=target_names,
         title='Confusion matrix, without normalization')
 
     ##  正規化後の混合行列の可視化
-    plot_confusion_matrix(y_test, y_pred, classes=class_names,
+    plot_confusion_matrix(y_test, y_pred, classes=target_names,
         normalize=True, title='Normalized confusion matrix')
 
     # 学習済みモデルがなかった場合はモデルを保存する

@@ -109,4 +109,4 @@ class LoadData():
 
         # データがない場合はエラーメッセージを出力
         else:
-            raise Exception("You have no dataset available ")
+            raise Exception("You have no dataset available")
