@@ -24,23 +24,40 @@ models = {
     "resnet": ResNetSmall()
 }
 
+# パーサーの作成
+parser = argparse.ArgumentParser(
+        description="MLP, CNN or ResNet trainer",
+        add_help=True, # -h/–help オプションの追加
+)
 
-# GPUを使える場合はGPU対応
-gpu = False # True：GPU使用可能，False：GPU使用不可
-try:
+# 引数の追加
+parser.add_argument("model",
+                    help="select a model",
+                    choices=["mlp", "cnn", "resnet"])
+parser.add_argument("--gpu", "-g",
+                    help="use gpu")
+
+# 引数を解析
+args = parser.parse_args()
+
+# モデルを選択
+model_name = args.model
+
+# GPUを使う場合はGPU対応に
+if args.gpu:
     gpu_device = 0
     cuda.get_device(gpu_device).use()
     xp = cuda.cupy
     gpu = True
-except:
+else:
     xp = np
+    gpu = False
 
 
 def preprocessing():
     """
     前処理
     """
-
     # データの読み込み
     koma = LoadData()
     x = koma.data
@@ -65,7 +82,6 @@ def train(model, optimizer, x_data, y_data, batchsize=10):
     """
     訓練データに対する正答率，誤差を表示する関数
     """
-
     x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替え
     N = x_data.shape[0] # データ数
     sum_accuracy = 0 # 累計正答率
@@ -93,7 +109,6 @@ def test(model, x_data, y_data, batchsize=10):
     """
     テストデータに対する正答率，誤差を表示する関数
     """
-
     x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替え
     N = x_data.shape[0] # データ数
     sum_accuracy = 0 # 累計正答率
@@ -112,49 +127,39 @@ def test(model, x_data, y_data, batchsize=10):
 
 
 if __name__ == "__main__":
+    # Step1. データの準備
+    x_train, y_train, x_test, y_test = preprocessing()
 
-    # コマンドライン引数が条件を満たしているとき
-    if len(sys.argv) == 2 and sys.argv[1]  in models.keys():
+    # Step2. モデルと最適化アルゴリズムの設定
+    model = L.Classifier(models[model_name]) # モデルの生成
 
-        # Step1. データの準備
-        x_train, y_train, x_test, y_test = preprocessing()
+    ## 学習済みモデルが存在する場合は利用する
+    try:
+        serializers.load_npz("../result/{}.npz".format(model_name),
+            model)
+    except FileNotFoundError as e:
+        pass
 
-        # Step2. モデルと最適化アルゴリズムの設定
-        model_name = sys.argv[1] # コマンドライン引数からモデル名を取得
-        model = L.Classifier(models[model_name]) # モデルの生成
+    ## GPUが使える場合はGPU対応に，
+    if gpu:
+        model = model.to_gpu(gpu_device)
 
-        ## 学習済みモデルが存在する場合は利用する
-        try:
-            serializers.load_npz("../result{}.npz".format(model_name),
-                model)
-            raise ImportError("No module named {}.npz".format(model_name))
-        except ImportError as e:
-            pass
+    optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
+    optimizer.setup(model) # アルゴリズムにモデルをフィット
 
-        ## GPUが使える場合はGPU対応に，
-        if gpu:
-            model = model.to_gpu(gpu_device)
+    # Step3. 学習
+    n_epoch = 10 # 学習回数(学習データを何周するか)
+    for epoch in range(1, n_epoch + 1):
+        print("\nepoch", epoch)
+        train(model, optimizer, x_train, y_train, batchsize=100)
+        test(model, x_test, y_test, batchsize=100)
 
-        optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
-        optimizer.setup(model) # アルゴリズムにモデルをフィット
+    # Step4. 結果の表示(EC2で実行するとメモリ不足になったためコメントアウト)
+    # x = chainer.Variable(xp.asarray(x_test))
+    # t = chainer.Variable(xp.asarray(y_test))
+    # y_pred = model(x,t).y
+    # plot_confusion_matrix(y_test, y_pred)
 
-        # Step3. 学習
-        n_epoch = 10 # 学習回数(学習データを何周するか)
-        for epoch in range(1, n_epoch + 1):
-            print("\nepoch", epoch)
-            train(model, optimizer, x_train, y_train, batchsize=100)
-            test(model, x_test, y_test, batchsize=100)
-
-        # Step4. 結果の表示(EC2で実行するとメモリ不足になったためコメントアウト)
-        # x = chainer.Variable(xp.asarray(x_test))
-        # t = chainer.Variable(xp.asarray(y_test))
-        # y_pred = model(x,t).y
-        # plot_confusion_matrix(y_test, y_pred)
-
-        # Step5. モデルの保存
-        model.to_cpu() # CPUで計算できるようにしておく
-        serializers.save_npz("../result/{}.npz".format(model_name), model)
-
-    else: # コマンドライン引数が条件を満たさないとき
-        print("please specify the model (mlp, cnn or resnet) \
-            like $ python train.py cnn")
+    # Step5. モデルの保存
+    model.to_cpu() # CPUで計算できるようにしておく
+    serializers.save_npz("../result/{}.npz".format(model_name), model)

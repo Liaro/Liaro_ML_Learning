@@ -25,19 +25,16 @@ models = {
     "svm": SVC() # 時間かかる
 }
 
-
 # パーサーの作成
 parser = argparse.ArgumentParser(
         description="K-NN, DT, RF or SVM trainer",
         add_help=True, # -h/–help オプションの追加
 )
 
-
 # 引数の追加
 parser.add_argument("model",
                     help="select a model",
                     choices=["knn", "dt", "rf", "svm"])
-
 
 # 引数を解析し，モデルを選択
 args = parser.parse_args()
@@ -87,6 +84,7 @@ def train(model_name):
     # 学習済みモデルがなかった場合はモデルを保存する
     if not learned_model_exists:
         joblib.dump(classifier, "../result/{}.pkl".format(model_name))
+
 
 if __name__ == "__main__":
     train(model_name)
