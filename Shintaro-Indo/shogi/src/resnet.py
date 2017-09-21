@@ -9,12 +9,10 @@ class ResBlock(chainer.Chain):
     def __init__(self, in_size, ch):
         super(ResBlock, self).__init__(
             # (入力チャネル数，出力フィルタ数，カーネルサイズ，ストライド(1)，パディング(0)）
-            conv1 = L.Convolution2D(
-                in_size, ch, 1, 1, 0,
+            conv1 = L.Convolution2D(in_size, ch, 1, 1, 0,
                 initialW=initializers.HeNormal(), nobias=True),
             bn1 = L.BatchNormalization(ch),
-            conv2 = L.Convolution2D(
-                ch, ch, 3, 1, 1,
+            conv2 = L.Convolution2D(ch, ch, 3, 1, 1,
                 initialW=initializers.HeNormal(), nobias=True),
             bn2 = L.BatchNormalization(ch),
              # xを足すので，入力サイズと揃える必要あり
@@ -29,6 +27,7 @@ class ResBlock(chainer.Chain):
         h = self.bn3(self.conv3(h))
 
         return F.relu(h + x)
+
 
 class ResNetSmall(chainer.Chain):
 

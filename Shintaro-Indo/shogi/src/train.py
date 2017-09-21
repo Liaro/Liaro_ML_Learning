@@ -34,8 +34,10 @@ parser = argparse.ArgumentParser(
 parser.add_argument("model",
                     help="select a model",
                     choices=["mlp", "cnn", "resnet"])
-parser.add_argument("--gpu", "-g",
-                    help="use gpu")
+parser.add_argument('--gpu', '-g',
+                    default=-1,
+                    type=int,
+                    help='GPU ID (negative value indicates CPU)')
 
 # 引数を解析
 args = parser.parse_args()
@@ -44,14 +46,13 @@ args = parser.parse_args()
 model_name = args.model
 
 # GPUを使う場合はGPU対応に
-if args.gpu:
-    gpu_device = 0
+gpu_device = None
+if args.gpu >= 0:
+    gpu_device = args.gpu
     cuda.get_device(gpu_device).use()
     xp = cuda.cupy
-    gpu = True
 else:
     xp = np
-    gpu = False
 
 
 def preprocessing():
@@ -140,8 +141,8 @@ if __name__ == "__main__":
     except FileNotFoundError as e:
         pass
 
-    ## GPUが使える場合はGPU対応に，
-    if gpu:
+    ## GPUが使える場合はモデルをGPU対応に，
+    if gpu_device>=0:
         model = model.to_gpu(gpu_device)
 
     optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
