@@ -86,7 +86,8 @@ class LoadData():
         # pickleファイルがあればそこから読み込む
         elif os.path.exists("../dataset/pickle"):
             self.data = self.load_pickle(path="../dataset/pickle/data.pkl")
-            self.target_ids = self.load_pickle(path="../dataset/pickle/target_ids.pkl")
+            self.target_ids = self.load_pickle(
+                path="../dataset/pickle/target_ids.pkl")
 
         # 生データのzipしかなければ解凍する
         elif (os.path.exists("../dataset/image/annotation_koma_merge.zip")
