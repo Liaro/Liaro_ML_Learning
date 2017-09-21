@@ -1,6 +1,5 @@
 import glob
 import os
-import os.path
 import pickle
 from zipfile import ZipFile
 
@@ -13,7 +12,7 @@ from sklearn.utils import shuffle
 class LoadData():
     """
     load_data.data：画像
-    load_data.target：ラベル
+    load_data.target_ids：ラベル
     load_data.target_names：クラス名
     注1：上記3つは全てarray
     注2：パスは全てmake_datasetモジュールを読み込むファイルを起点とする
@@ -21,14 +20,14 @@ class LoadData():
 
     def __init__(self):
         self.data = []  # 画像を格納するlist．後にarrayに変換．
-        self.target = []  # ラベルを格納するlist．後にarrayに変換．
+        self.target_ids = []  # ラベルを格納するlist．後にarrayに変換．
         self.target_names = np.array([  # 成り駒以外の8種類
             "fu", "gin", "hisya", "kaku", "kei", "kin", "kyo", "ou"])
         self.run()
 
     def extract_zip(self, zip_dir_path, file_name): #
         """
-        zipファイルを， zipファイルが存在するディレクトリで展開するメソッド
+        zipファイルを， zipファイルが存在するディレクトリで展開する関数
         input：zip_dir_path zipファイルが存在するディレクトリへのパス
         input：file_name zipファイルの名前
         """
@@ -37,7 +36,7 @@ class LoadData():
 
     def load_pickle(self, path):
         """
-        pickleファイルのデータを読み込んで，arrayを返すメソッド
+        pickleファイルのデータを読み込んで，オブジェクトとして返す関数
         path：読み込むファイルからpickleファイルへのパス
         """
         with open(path, "rb") as f:
@@ -58,8 +57,8 @@ class LoadData():
         # 生データが存在するディレクトリへのパス
         data_dir_path = "../dataset/image/annotation_koma_merge/"
 
-        # 各クラスごとに， 画像をself.dataに、ラベルをself.targetに格納する。
-        for target, target_name in enumerate(self.target_names):
+        # 各クラスごとに， 画像をself.dataに、ラベルをself.target_idsに格納する。
+        for target_id, target_name in enumerate(self.target_names):
 
             # 画像へのパスを作成
             data_paths = glob.glob(data_dir_path + target_name + "/*")
@@ -68,15 +67,15 @@ class LoadData():
             for data_path in data_paths:
                 self.data.append(np.array( # 4channel目は無視．
                     Image.open(data_path).resize(size))[:, :, :3])
-                self.target.append(target)
+                self.target_ids.append(target_id)
 
         # Arrayに変換
         self.data = np.array(self.data)
-        self.target = np.array(self.target)
+        self.target_ids = np.array(self.target_ids)
 
     def run(self):
         """
-        datasetに存在するデータの種類に応じて格納を行うメインメソッド
+        datasetに存在するデータの種類に応じて格納を行うメイン関数
         """
         # pickleのzipしかなければ解凍する
         if (os.path.exists("../dataset/pickle.zip")
@@ -87,7 +86,7 @@ class LoadData():
         # pickleファイルがあればそこから読み込む
         elif os.path.exists("../dataset/pickle"):
             self.data = self.load_pickle(path="../dataset/pickle/data.pkl")
-            self.target = self.load_pickle(path="../dataset/pickle/target.pkl")
+            self.target_ids = self.load_pickle(path="../dataset/pickle/target_ids.pkl")
 
         # 生データのzipしかなければ解凍する
         elif (os.path.exists("../dataset/image/annotation_koma_merge.zip")
@@ -105,9 +104,9 @@ class LoadData():
             os.mkdir(path="../dataset/pickle")
             self.dump_pickle(path="../dataset/pickle/data.pkl",
                              data=self.data) # 画像データpickle化
-            self.dump_pickle(path="../dataset/pickle/target.pkl",
-                             data=self.target) # ラベルデータをpickle化
+            self.dump_pickle(path="../dataset/pickle/target_ids.pkl",
+                             data=self.target_ids) # ラベルデータをpickle化
 
         # データがない場合はエラーメッセージを出力
         else:
-            print("You have no available dataset")
+            raise Exception("You have no dataset available ")

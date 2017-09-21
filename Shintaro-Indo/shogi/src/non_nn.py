@@ -52,7 +52,7 @@ def run(model_name):
     koma = LoadData() # 駒の種類．混同行列に利用．
     class_names = koma.target_names
     x = koma.data.reshape(koma.data.shape[0], -1) # 一次元化
-    y = koma.target
+    y = koma.target_ids
     x_train, x_test, y_train, y_test = train_test_split(x, y,
         test_size=0.3, random_state=42)
 
@@ -63,8 +63,7 @@ def run(model_name):
     learned_model_exists=True
     try:
         classifier = joblib.load("../result/{}.pkl".format(model_name))
-        raise ImportError("No module named {}.pkl".format(model_name))
-    except ImportError as e:
+    except FileNotFoundError:
         classifier = model.fit(x_train, y_train)
         model_exists=False
 

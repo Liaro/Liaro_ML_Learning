@@ -2,14 +2,14 @@ import argparse
 import sys
 import time
 
-import numpy as np
-from tqdm import tqdm
 import chainer
 import chainer.links as L
 from chainer import cuda, optimizers, serializers
+import numpy as np
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
+from tqdm import tqdm
 
 from cnn import CNN
 from make_dataset import LoadData
@@ -50,9 +50,8 @@ args = parser.parse_args()
 model_name = args.model
 
 # GPUを使う場合はGPU対応に
-gpu_device = None
+gpu_device = args.gpu
 if args.gpu >= 0:
-    gpu_device = args.gpu
     cuda.get_device(gpu_device).use()
     xp = cuda.cupy
 else:
@@ -67,7 +66,7 @@ def preprocessing():
     koma = LoadData()
     x = koma.data
     x = x.reshape(x.shape[0], 3, 80, 64) # (データ数，チャネル数，縦，横)に
-    y = koma.target
+    y = koma.target_ids
     x_train, x_test, y_train, y_test = train_test_split(x, y,
         test_size=0.3, random_state=42)
 

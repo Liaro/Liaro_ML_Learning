@@ -12,7 +12,8 @@ def plot_confusion_matrix(y_test, y_pred, classes, normalize=False,
     cm = confusion_matrix(y_test, y_pred) # 混同行列
 
     if normalize:
-        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] # 各行の和を列ベクトル化
+        # 各行の和を列ベクトル化
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
     plt.figure(figsize = (6, 6))
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
