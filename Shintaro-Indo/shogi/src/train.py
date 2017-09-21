@@ -26,18 +26,22 @@ models = {
 
 # パーサーの作成
 parser = argparse.ArgumentParser(
-        description="MLP, CNN or ResNet trainer",
-        add_help=True, # -h/–help オプションの追加
+    description="MLP, CNN or ResNet trainer",
+    add_help=True, # -h/–help オプションの追加
 )
 
 # 引数の追加
-parser.add_argument("model",
-                    help="select a model",
-                    choices=["mlp", "cnn", "resnet"])
-parser.add_argument('--gpu', '-g',
-                    default=-1,
-                    type=int,
-                    help='GPU ID (negative value indicates CPU)')
+parser.add_argument(
+    "model",
+    help="select a model",
+    choices=["mlp", "cnn", "resnet"]
+)
+parser.add_argument(
+    '--gpu', '-g',
+    default=-1,
+    type=int,
+    help='GPU ID (negative value indicates CPU)'
+)
 
 # 引数を解析
 args = parser.parse_args()
@@ -127,7 +131,10 @@ def test(model, x_data, y_data, batchsize=10):
         .format(sum_loss / N, sum_accuracy / N))
 
 
-if __name__ == "__main__":
+def run(model_name):
+    """
+    メインメソッド
+    """
     # Step1. データの準備
     x_train, y_train, x_test, y_test = preprocessing()
 
@@ -142,7 +149,7 @@ if __name__ == "__main__":
         pass
 
     ## GPUが使える場合はモデルをGPU対応に，
-    if gpu_device>=0:
+    if gpu_device >= 0:
         model = model.to_gpu(gpu_device)
 
     optimizer = optimizers.Adam() # 最適化アルゴリズムの選択
@@ -150,7 +157,7 @@ if __name__ == "__main__":
 
     # Step3. 学習
     n_epoch = 10 # 学習回数(学習データを何周するか)
-    for epoch in range(1, n_epoch + 1):
+    for epoch in range(1, n_epoch+1):
         print("\nepoch", epoch)
         train(model, optimizer, x_train, y_train, batchsize=100)
         test(model, x_test, y_test, batchsize=100)
@@ -164,3 +171,7 @@ if __name__ == "__main__":
     # Step5. モデルの保存
     model.to_cpu() # CPUで計算できるようにしておく
     serializers.save_npz("../result/{}.npz".format(model_name), model)
+
+
+if __name__ == "__main__":
+    run(model_name)

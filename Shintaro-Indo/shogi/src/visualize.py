@@ -4,15 +4,15 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 
 
-# 混同行列を描画する関数
 def plot_confusion_matrix(y_test, y_pred, classes, normalize=False,
                           title='Confusion matrix', cmap=plt.cm.Blues):
-    cm = confusion_matrix(y_test, y_pred) # 混同行列の作成
+    """
+    混同行列を描画する関数
+    """
+    cm = confusion_matrix(y_test, y_pred) # 混同行列
 
-    # 正規化
     if normalize:
-        # 各行の和を列ベクトル化
-        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] # 各行の和を列ベクトル化
 
     plt.figure(figsize = (6, 6))
     plt.imshow(cm, interpolation='nearest', cmap=cmap)

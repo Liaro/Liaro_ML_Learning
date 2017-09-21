@@ -55,7 +55,6 @@ class LoadData():
         """
         生データからデータセットを作るメソッド(trainとtestの分け方はランダム)
         """
-
         # 生データが存在するディレクトリへのパス
         data_dir_path = "../dataset/image/annotation_koma_merge/"
 
@@ -77,7 +76,7 @@ class LoadData():
 
     def run(self):
         """
-        データセットに存在するデータの種類に応じて格納を行うメインメソッド
+        datasetに存在するデータの種類に応じて格納を行うメインメソッド
         """
         # pickleのzipしかなければ解凍する
         if (os.path.exists("../dataset/pickle.zip")
