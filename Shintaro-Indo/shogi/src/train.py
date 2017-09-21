@@ -1,3 +1,4 @@
+import argparse
 import sys
 import time
 
@@ -60,8 +61,10 @@ def preprocessing():
     return x_train, y_train, x_test, y_test
 
 
-# 訓練データに対する正答率，誤差を表示する関数
 def train(model, optimizer, x_data, y_data, batchsize=10):
+    """
+    訓練データに対する正答率，誤差を表示する関数
+    """
 
     x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替え
     N = x_data.shape[0] # データ数
@@ -86,8 +89,10 @@ def train(model, optimizer, x_data, y_data, batchsize=10):
         .format(sum_loss / N, sum_accuracy / N, throughput))
 
 
-# テストデータに対する正答率，誤差を表示する関数
 def test(model, x_data, y_data, batchsize=10):
+    """
+    テストデータに対する正答率，誤差を表示する関数
+    """
 
     x_data, y_data = shuffle(x_data, y_data) # 学習する順番をランダムに入れ替え
     N = x_data.shape[0] # データ数

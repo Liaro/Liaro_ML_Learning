@@ -1,3 +1,4 @@
+import argparse
 import sys
 import os
 
@@ -25,53 +26,67 @@ models = {
 }
 
 
+# パーサーの作成
+parser = argparse.ArgumentParser(
+        description="K-NN, DT, RF or SVM trainer",
+        add_help=True, # -h/–help オプションの追加
+)
+
+
+# 引数の追加
+parser.add_argument("model",
+                    help="select a model",
+                    choices=["knn", "dt", "rf", "svm"])
+
+
+# 引数を解析し，モデルを選択
+args = parser.parse_args()
+model_name = args.model
+
+
+def train(model_name):
+    # データの準備
+    koma = LoadData() # 駒の種類．混同行列に利用．
+    class_names = koma.target_names
+    x = koma.data.reshape(koma.data.shape[0], -1) # 一次元化
+    y = koma.target
+    x_train, x_test, y_train, y_test = train_test_split(x, y,
+        test_size=0.3, random_state=42)
+
+    # モデルの選択
+    model = models[model_name]
+
+    # 学習済みモデルがあれば利用し，なければ学習させる
+    learned_model_exists=True
+    try:
+        classifier = joblib.load("../result/{}.pkl"
+            .format(model_name))
+        raise ImportError("No module named {}.pkl".format(model_name))
+    except ImportError as e:
+        classifier = model.fit(x_train, y_train)
+        model_exists=False
+
+    # 予測
+    y_pred = classifier.predict(x_test)
+
+    # 結果の表示
+    print(model.__class__.__name__)
+    print("train:", classifier.score(x_train, y_train))
+    print("test:", classifier.score(x_test, y_test))
+    print("F1: ", f1_score(y_test[:len(y_pred)], y_pred,
+        average='macro'))
+
+    ## 正規化前の混合行列の可視化
+    plot_confusion_matrix(y_test, y_pred, classes=class_names,
+        title='Confusion matrix, without normalization')
+
+    ##  正規化後の混合行列の可視化
+    plot_confusion_matrix(y_test, y_pred, classes=class_names,
+        normalize=True, title='Normalized confusion matrix')
+
+    # 学習済みモデルがなかった場合はモデルを保存する
+    if not learned_model_exists:
+        joblib.dump(classifier, "../result/{}.pkl".format(model_name))
+
 if __name__ == "__main__":
-
-    sys.path.append(os.pardir)
-
-    # コマンドライン引数が条件を満たしているとき
-    if len(sys.argv) == 2 and sys.argv[1] in models.keys():
-        model_name = sys.argv[1]
-
-        # データの準備
-        koma = LoadData() # 駒の種類．混同行列に利用．
-        class_names = koma.target_names
-        x = koma.data.reshape(koma.data.shape[0], -1) # 一次元化
-        y = koma.target
-        x_train, x_test, y_train, y_test = train_test_split(x, y,
-            test_size=0.3, random_state=42)
-
-        model = models[model_name] # コマンドライン引数からモデルを選択
-
-        # 学習済みモデルがあれば利用し，なければ学習させる
-        try:
-            classifier = joblib.load("../result/{}.pkl"
-                .format(model_name))
-            raise ImportError("No module named {}.pkl".format(model_name))
-        except ImportError as e:
-            classifier = model.fit(x_train, y_train)
-
-        y_pred = classifier.predict(x_test)  # 予測
-
-        # 結果の表示
-        print(model.__class__.__name__)
-        print("train:", classifier.score(x_train, y_train))
-        print("test:", classifier.score(x_test, y_test))
-        print("F1: ", f1_score(y_test[:len(y_pred)], y_pred,
-            average='macro'))
-
-        ## 正規化前の混合行列の可視化
-        plot_confusion_matrix(y_test, y_pred, classes=class_names,
-            title='Confusion matrix, without normalization')
-
-        ##  正規化後の混合行列の可視化
-        plot_confusion_matrix(y_test, y_pred, classes=class_names,
-            normalize=True, title='Normalized confusion matrix')
-
-        # モデルの保存
-        joblib.dump(classifier, "../result/{}.pkl".format(sys.argv[1]))
-
-    # 例外処理
-    else:
-        print("please specify the model (knn, dt, rf or svm)\
-            like $ python non_nn.py rf ")
+    train(model_name)
