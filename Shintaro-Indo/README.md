@@ -1,0 +1,2 @@
+- self-study：自習用
+- shogi：将棋の駒画像の分類
