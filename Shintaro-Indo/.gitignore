@@ -1,9 +1,9 @@
 *.ipynb_checkpoints
-*.DS_Store
 *.python-version
 __pycache__/
 
 self-study/*
 
 shogi/dataset/*
+shogi/notebook/*
 shogi/result/*

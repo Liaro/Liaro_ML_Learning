@@ -23,7 +23,6 @@ class LoadData():
         self.target_ids = []  # ラベルを格納するlist．後にarrayに変換．
         self.target_names = np.array([  # 成り駒以外の8種類
             "fu", "gin", "hisya", "kaku", "kei", "kin", "kyo", "ou"])
-        self.run()
 
     def extract_zip(self, zip_dir_path, file_name): #
         """

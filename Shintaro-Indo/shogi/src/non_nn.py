@@ -49,8 +49,9 @@ def run(model_name):
     """
 
     # データの準備
-    koma = LoadData() # 駒の種類．混同行列に利用．
-    target_names = koma.target_names
+    koma = LoadData()
+    koma.run() # メインメソッドを実行して各プロパティにデータを格納する．
+    target_names = koma.target_names # 駒の種類．混同行列に利用．
     x = koma.data.reshape(koma.data.shape[0], -1) # 一次元化
     y = koma.target_ids
     x_train, x_test, y_train, y_test = train_test_split(x, y,

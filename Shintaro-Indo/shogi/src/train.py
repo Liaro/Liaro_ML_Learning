@@ -64,19 +64,20 @@ def preprocessing():
     """
     # データの読み込み
     koma = LoadData()
+    koma.run() # メインメソッドを実行して各プロパティにデータを格納する．
     x = koma.data
     x = x.reshape(x.shape[0], 3, 80, 64) # (データ数，チャネル数，縦，横)に
     y = koma.target_ids
     x_train, x_test, y_train, y_test = train_test_split(x, y,
         test_size=0.3, random_state=42)
 
-    # Chainerでは数値データを32bit型にする必要がある．
+    # 数値データを32bit型に変換
     x_train = x_train.astype(xp.float32) # (40681, 80, 64, 3)
     y_train = y_train.astype(xp.int32) # (40681,)
     x_test = x_test.astype(xp.float32)
     y_test = y_test.astype(xp.int32)
 
-    # 輝度を揃える
+    # 輝度の統一
     x_train /= x_train.max()
     x_test /= x_test.max()
     return x_train, y_train, x_test, y_test
