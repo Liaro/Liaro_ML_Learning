@@ -1,13 +1,11 @@
 *.ipynb_checkpoints
 *.DS_Store
 *.python-version
+__pycache__/
 
-self-study/dataset/*
-self-study/notebook/__pycache__/*
-self-study/src/__pycache__/*
+self-study/*
 
 shogi/dataset/*
-shogi/notebook/__pycache__/*
-shogi/src/__pycache__/*
-shogi/notebook/.ipynb_checkpoints/*
-shogi/notebooks/.ipynb_checkpoints/*
+shogi/result/*
+
+!*.gitkeep
